@@ -26,11 +26,11 @@ neon configure:
 # alias router
 aliasRouter:
     table: %tb_router%
-    domainSwitch: true
-    domainAlias:
-        example.cz: cs
-        example.com: en
-        example.de: de
+#    domainSwitch: true
+#    domainAlias:
+#        example.cz: cs
+#        example.com: en
+#        example.de: de
 ```
 
 neon configure extension:
