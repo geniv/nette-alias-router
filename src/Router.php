@@ -179,7 +179,7 @@ class Router implements IRouter
         if ($param) {
             $parameters = $appRequest->parameters;
 
-            $part = implode('/', array_filter([$this->model->getCodeLocale(), $param->alias, $param->id_item]));
+            $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias, $param->id_item]));
             $alias = trim(isset($parameters['vp']) ? implode('_', [$part, $parameters['vp']]) : $part, '/_');
 
             unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters['vp']);
@@ -189,16 +189,17 @@ class Router implements IRouter
             $url->setScheme($this->secure ? 'https' : 'http');
             $url->setQuery($parameters);
             return $url->getAbsoluteUrl();
+        } else {
+            // vyber jazyka podle domeny
+            $domain = $this->model->getDomain();
+            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
+            // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
+            if ($domain && $domain['switch'] && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
+                $url = new Url($refUrl->getBaseUrl());  // vytvari zakladni cestu bez parametru
+                $url->setScheme($this->secure ? 'https' : 'http');
+                return $url->getAbsoluteUrl();
+            }
         }
-
-//            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
-//            if ($this->configure['languageDomainSwitch'] && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
-//                $url = new Url($refUrl->getBaseUrl());
-//                $url->setScheme($this->flags & self::SECURED ? 'https' : 'http');
-//                return $url->getAbsoluteUrl();
-//            }
-//            return null;
-
         return null;
     }
 }
