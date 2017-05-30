@@ -164,11 +164,17 @@ class Model
      *
      * Use in Router::constructUrl().
      *
+     * @param $parameters
      * @return string
      */
-    public function getCodeLocale()
+    public function getCodeLocale($parameters)
     {
-        return (!$this->localeService->isDefaultLocale() ? $this->localeService->getCode() : '');
+        $domain = $this->getDomain();
+        // nuluje lokalizaci pri hlavnim jazyku a domain switch
+        if (isset($parameters['locale']) && $parameters['locale'] == $this->localeService->getCodeDefault() || ($domain && $domain['switch'])) {
+            return '';
+        }
+        return $parameters['locale'];
     }
 
 
