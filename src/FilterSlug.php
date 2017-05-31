@@ -8,12 +8,12 @@ use Nette\SmartObject;
 
 
 /**
- * Class LatteSlugFilter
+ * Class FilterSlug
  *
  * @author  geniv
  * @package AliasRouter
  */
-class LatteSlugFilter
+class FilterSlug
 {
     use SmartObject;
 
@@ -24,7 +24,7 @@ class LatteSlugFilter
 
 
     /**
-     * LatteSlugFilter constructor.
+     * FilterSlug constructor.
      *
      * @param Model       $model
      * @param Application $application

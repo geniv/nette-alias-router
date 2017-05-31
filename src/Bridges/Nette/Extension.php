@@ -3,7 +3,7 @@
 namespace AliasRouter\Bridges\Nette;
 
 use AliasRouter\Bridges\Tracy\Panel;
-use AliasRouter\LatteSlugFilter;
+use AliasRouter\FilterSlug;
 use AliasRouter\Model;
 use Nette\DI\CompilerExtension;
 
@@ -40,7 +40,7 @@ class Extension extends CompilerExtension
 
         // definice filteru
         $builder->addDefinition($this->prefix('filter.slug'))
-            ->setClass(LatteSlugFilter::class);
+            ->setClass(FilterSlug::class);
 
         // definice panelu
         $builder->addDefinition($this->prefix('panel'))
