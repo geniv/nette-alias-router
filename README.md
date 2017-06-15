@@ -13,9 +13,9 @@ or
 
 internal dependency:
 ```json
-"nette/nette": ">=2.4",
-"dibi/dibi": ">=3.0",
-"geniv/nette-locale": ">=1.0"
+"nette/nette": ">=2.4.0",
+"dibi/dibi": ">=3.0.0",
+"geniv/nette-locale": ">=1.0.0"
 ```
 
 Include in application
