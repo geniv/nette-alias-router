@@ -38,13 +38,13 @@ class Model
     /**
      * Model constructor.
      *
-     * @param            $parameters
+     * @param array      $parameters
      * @param Connection $connection
      * @param Locale     $locale
      * @param IStorage   $storage
      * @throws Exception
      */
-    public function __construct($parameters, Connection $connection, Locale $locale, IStorage $storage)
+    public function __construct(array $parameters, Connection $connection, Locale $locale, IStorage $storage)
     {
         // pokud parametr table neexistuje
         if (!isset($parameters['table'])) {
