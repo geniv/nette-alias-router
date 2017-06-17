@@ -179,7 +179,7 @@ class Router implements IRouter
         if ($param) {
             $parameters = $appRequest->parameters;
 
-            $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias, $param->id_item]));
+            $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias]));
             $alias = trim(isset($parameters['vp']) ? implode('_', [$part, $parameters['vp']]) : $part, '/_');
 
             unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters['vp']);

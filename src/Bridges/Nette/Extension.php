@@ -20,6 +20,7 @@ class Extension extends CompilerExtension
 {
     /** @var array vychozi hodnoty */
     private $defaults = [
+        'debugger'     => true,
         'table'        => null,
         'domainSwitch' => false,
         'domainAlias'  => [],
@@ -54,13 +55,16 @@ class Extension extends CompilerExtension
     public function beforeCompile()
     {
         $builder = $this->getContainerBuilder();
+        $config = $this->validateConfig($this->defaults);
 
         // pripojeni filru do latte
         $builder->getDefinition('latte.latteFactory')
             ->addSetup('addFilter', ['addSlug', $this->prefix('@filter.slug')]);
 
-        // pripojeni panelu do tracy
-        $builder->getDefinition($this->prefix('default'))
-            ->addSetup('?->register(?)', [$this->prefix('@panel'), '@self']);
+        if ($config['debugger']) {
+            // pripojeni panelu do tracy
+            $builder->getDefinition($this->prefix('default'))
+                ->addSetup('?->register(?)', [$this->prefix('@panel'), '@self']);
+        }
     }
 }
