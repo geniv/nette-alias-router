@@ -25,6 +25,7 @@ neon configure:
 ```neon
 # alias router
 aliasRouter:
+#	debugger: false
     table: %tb_router%
 #    domainSwitch: true
 #    domainAlias:
