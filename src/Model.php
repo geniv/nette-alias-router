@@ -169,6 +169,11 @@ class Model
      */
     public function getCodeLocale($parameters)
     {
+        // null locale => empty locale in url
+        if (!isset($parameters['locale'])) {
+            return '';
+        }
+
         $domain = $this->getDomain();
         // nuluje lokalizaci pri hlavnim jazyku a domain switch
         if (isset($parameters['locale']) && $parameters['locale'] == $this->localeService->getCodeDefault() || ($domain && $domain['switch'])) {
