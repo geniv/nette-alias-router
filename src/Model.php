@@ -285,7 +285,7 @@ class Model
     public function insertAlias(Presenter $presenter, $alias)
     {
         $result = null;
-        $safeAlias = Strings::webalize($alias);
+        $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
             $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
             $result = $this->getIdRouterAlias($idRouter, $this->localeService->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
