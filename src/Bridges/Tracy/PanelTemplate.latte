@@ -1,24 +1,20 @@
 <h1>{$routerClass}</h1>
 <div class="tracy-inner">
-    <table class="table">
-        <thead>
+    <table>
         <tr>
             <th>Id</th>
             <th>Alias</th>
             <th>Id item</th>
             <th>Added</th>
         </tr>
-        </thead>
-        <tbody>
-        <tr n:foreach="$routes as $route" n:class="$iterator->first?active">
-            <td>{$route->id}</td>
-            <td>{$route->alias}</td>
-            <td>{$route->id_item}</td>
-            <td>{$route->added|date:'d.m.Y H:i:s'}</td>
+        <tr n:foreach="$routes as $route">
+            <td><strong n:tag-if="$iterator->first">{$route->id}</strong></td>
+            <td><strong n:tag-if="$iterator->first">{$route->alias}</strong></td>
+            <td><strong n:tag-if="$iterator->first">{$route->id_item}</strong></td>
+            <td><strong n:tag-if="$iterator->first">{$route->added|date:'d.m.Y H:i:s'}</strong></td>
         </tr>
         <tr n:if="$iterations==0">
             <td colspan="4" style="text-align: center;">No alias</td>
         </tr>
-        </tbody>
     </table>
 </div>
