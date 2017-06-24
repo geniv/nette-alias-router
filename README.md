@@ -26,7 +26,7 @@ neon configure:
 # alias router
 aliasRouter:
 #	debugger: false
-    table: %tb_router%
+    tablePrefix: %tablePrefix%
 #    domainSwitch: true
 #    domainAlias:
 #        example.cz: cs

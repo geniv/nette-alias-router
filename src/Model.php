@@ -23,6 +23,11 @@ class Model
 {
     use SmartObject;
 
+    // define constant table names
+    const
+        TABLE_NAME = 'router',
+        TABLE_NAME_ALIAS = 'router_alias';
+
     /** @var string tables name */
     private $tableRouter, $tableRouterAlias;
     /** @var Connection database from DI */
@@ -46,14 +51,6 @@ class Model
      */
     public function __construct(array $parameters, Connection $connection, Locale $locale, IStorage $storage)
     {
-        // pokud parametr table neexistuje
-        if (!isset($parameters['table'])) {
-            throw new Exception('Table name is not defined in configure! (table: xy)');
-        }
-
-        // nacteni jmena tabulky
-        $tableRouter = $parameters['table'];
-
         // pokud jeden z parametru domainSwitch nebo domainAlias neexistuje
         if (isset($parameters['domainSwitch']) XOR isset($parameters['domainAlias'])) {
             throw new Exception('Domain switch or domain alias is not defined in configure! ([domainSwitch: true, domainAlias: [cs: example.cz]])');
@@ -67,8 +64,10 @@ class Model
             ];
         }
 
-        $this->tableRouter = $tableRouter;
-        $this->tableRouterAlias = $tableRouter . '_alias';
+        // define table names
+        $this->tableRouter = $parameters['tablePrefix'] . self::TABLE_NAME;
+        $this->tableRouterAlias = $parameters['tablePrefix'] . self::TABLE_NAME_ALIAS;
+
         $this->connection = $connection;
         $this->localeService = $locale;
         $this->cache = new Cache($storage, 'cache-AliasRouter-Model');

@@ -21,7 +21,7 @@ class Extension extends CompilerExtension
     /** @var array vychozi hodnoty */
     private $defaults = [
         'debugger'     => true,
-        'table'        => null,
+        'tablePrefix'  => null,
         'domainSwitch' => false,
         'domainAlias'  => [],
     ];
