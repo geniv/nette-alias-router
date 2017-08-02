@@ -11,8 +11,6 @@ use Nette\DI\CompilerExtension;
 /**
  * Class Extension
  *
- * nette extension pro alias router jako rozsireni
- *
  * @author  geniv
  * @package AliasRouter\Bridges\Nette
  */

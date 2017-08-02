@@ -8,11 +8,12 @@ $ composer require geniv/nette-alias-router
 ```
 or
 ```json
-"geniv/nette-alias-router": ">=1.0"
+"geniv/nette-alias-router": ">=1.0.0"
 ```
 
-internal dependency:
+require:
 ```json
+"php": ">=5.6.0",
 "nette/nette": ">=2.4.0",
 "dibi/dibi": ">=3.0.0",
 "geniv/nette-locale": ">=1.0.0"
