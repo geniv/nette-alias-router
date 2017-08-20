@@ -75,7 +75,7 @@ class Panel implements IBarPanel
 
         $params = [
             'routerClass' => get_class($this->model),
-            'routes'      => $this->model->getRouterAlias($presenter, $locale->getId()),
+            'routes'      => ($presenter ? $this->model->getRouterAlias($presenter, $locale->getId()) : []),
         ];
 
         $latte = new Engine;
