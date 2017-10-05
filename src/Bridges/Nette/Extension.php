@@ -35,16 +35,16 @@ class Extension extends CompilerExtension
 
         // define model
         $builder->addDefinition($this->prefix('default'))
-            ->setClass(Model::class, [$config]);
+            ->setFactory(Model::class, [$config]);
 
         // define filter
         $builder->addDefinition($this->prefix('filter.slug'))
-            ->setClass(FilterSlug::class);
+            ->setFactory(FilterSlug::class);
 
         // define panel
         if (isset($config['debugger']) && $config['debugger']) {
             $builder->addDefinition($this->prefix('panel'))
-                ->setClass(Panel::class);
+                ->setFactory(Panel::class);
         }
     }
 
