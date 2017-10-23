@@ -4,6 +4,7 @@ namespace AliasRouter;
 
 use Dibi;
 use Dibi\Connection;
+use Dibi\UniqueConstraintViolationException;
 use Exception;
 use Locale\Locale;
 use Nette\Application\UI\Presenter;
@@ -104,8 +105,10 @@ class Model
             $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-                ->where(['a.id_locale%iN' => $this->localeService->getIdByCode($locale)])
-                ->where('a.alias=%s', $alias)
+                ->where([
+                    'a.id_locale%iN' => $this->localeService->getIdByCode($locale),
+                    'a.alias'        => $alias,
+                ])
                 ->fetch();
 
             $this->cache->save($cacheKey, $result, [
@@ -134,18 +137,20 @@ class Model
             $result = $this->connection->select('r.id, a.alias, a.id_item')
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-                ->where('r.presenter=%s', $presenter)
-                ->where(['a.id_locale%iN' => $this->localeService->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : null)])
+                ->where([
+                    'r.presenter'    => $presenter,
+                    'a.id_locale%iN' => $this->localeService->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : null),
+                ])
                 ->orderBy('a.added')->desc();
 
             // add action condition
             if (isset($parameters['action'])) {
-                $result->where('r.action=%s', $parameters['action']);
+                $result->where(['r.action' => $parameters['action']]);
             }
 
             // add id condition
             if (isset($parameters['id'])) {
-                $result->where('a.id_item=%i', $parameters['id']);
+                $result->where(['a.id_item' => $parameters['id']]);
             }
             $result = $result->fetch();
 
@@ -198,8 +203,10 @@ class Model
         if ($id === null) {
             $id = $this->connection->select('id')
                 ->from($this->tableRouter)
-                ->where('presenter=%s', $presenter)
-                ->where('action=%s', $action)
+                ->where([
+                    'presenter' => $presenter,
+                    'action'    => $action,
+                ])
                 ->fetchSingle();
 
             if (!$id) {
@@ -236,11 +243,13 @@ class Model
         if ($id === null) {
             $cursor = $this->connection->select('id')
                 ->from($this->tableRouterAlias)
-                ->where('id_router=%i', $idRouter)
-                ->where(['id_locale%iN' => $idLocale])
-                ->where('alias=%s', $alias);
+                ->where([
+                    'id_router'    => $idRouter,
+                    'id_locale%iN' => $idLocale,
+                    'alias'        => $alias,
+                ]);
             if ($idItem) {
-                $cursor->where('id_item=%i', $idItem);
+                $cursor->where(['id_item' => $idItem]);
             }
             $id = $cursor->fetchSingle();
 
@@ -251,13 +260,24 @@ class Model
         }
 
         if (!$id) {
-            $id = $this->connection->insert($this->tableRouterAlias, [
-                'id_router' => $idRouter,
-                'id_locale' => $idLocale,
-                'id_item'   => $idItem,
-                'alias'     => $alias,
-                'added%sql' => 'NOW()',
-            ])->execute(Dibi::IDENTIFIER);
+            try {
+                $id = $this->connection->insert($this->tableRouterAlias, [
+                    'id_router' => $idRouter,
+                    'id_locale' => $idLocale,
+                    'id_item'   => $idItem,
+                    'alias'     => $alias,
+                    'added%sql' => 'NOW()',
+                ])->execute(Dibi::IDENTIFIER);
+            } catch (UniqueConstraintViolationException $e) {
+                // recursive resolve duplicate alias
+                $al = explode('--', $alias);    // explode alias
+                if (count($al) > 1) {
+                    $alias = implode(array_slice($al, 0, -1)) . '--' . ($al[count($al) - 1] + 1);   // implode alias
+                } else {
+                    $alias .= '--' . 1; // first repair name
+                }
+                $id = $this->getIdRouterAlias($idRouter, $idLocale, $idItem, $alias);   // but db autoincrement is still increment :(
+            }
 
             // promaze cache az po vlozeni
             $this->cleanCache();
@@ -327,8 +347,10 @@ class Model
         $result = null;
         if ($presenter && $action && $alias) {
             $result = $this->connection->delete($this->tableRouterAlias)
-                ->where('id_router=%i', $this->getIdRouter($presenter, $action))
-                ->where('alias=%s', $alias);
+                ->where([
+                    'id_router' => $this->getIdRouter($presenter, $action),
+                    'alias'     => $alias,
+                ]);
             // dodatecne parametry
             if ($parameters) {
                 $result->where($parameters);
@@ -337,13 +359,14 @@ class Model
         } elseif ($presenter && $action) {
             // mazani podle presenteru a akce
             $this->connection->delete($this->tableRouter)
-                ->where('presenter=%s', $presenter)
-                ->where('action=%s', $action)
+                ->where([
+                    'presenter' => $presenter,
+                    'action'    => $action])
                 ->execute();
         } elseif ($presenter) {
             // mazani podle presenteru
             $this->connection->delete($this->tableRouter)
-                ->where('presenter=%s', $presenter)
+                ->where(['presenter' => $presenter])
                 ->execute();
         }
         // promazani cache
@@ -367,18 +390,20 @@ class Model
         $result = $this->connection->select('a.id, a.alias, a.id_item, a.added')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-            ->where('r.presenter=%s', $presenter->getName())
-            ->where(['a.id_locale%iN' => $idLocale])
+            ->where([
+                'r.presenter'    => $presenter->getName(),
+                'a.id_locale%iN' => $idLocale,
+            ])
             ->orderBy('a.added')->desc();
 
         // add action condition
         if ($presenter->action) {
-            $result->where('r.action=%s', $presenter->action);
+            $result->where(['r.action' => $presenter->action]);
         }
 
         // add id condition
         if ($idItem) {
-            $result->where('a.id_item=%i', $idItem);
+            $result->where(['a.id_item' => $idItem]);
         }
         return $result;
     }
