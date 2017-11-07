@@ -4,7 +4,6 @@ namespace AliasRouter;
 
 use Nette\Application\IRouter;
 use Nette\Application\Request;
-use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
 
