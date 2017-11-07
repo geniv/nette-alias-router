@@ -37,7 +37,7 @@ class Extension extends CompilerExtension
 
         // define router
         $builder->addDefinition($this->prefix('default'))
-            ->setFactory(AliasRouter::class, [$config]);
+            ->setFactory(AliasRouter::class);
 
         // define model
         $builder->addDefinition($this->prefix('model'))

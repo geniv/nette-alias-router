@@ -48,8 +48,8 @@ public static function createRouter(Locale $locale, AliasRouter $aliasRouter): I
 ...
 $router[] = $aliasRouter;
 $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
-$aliasRouter->setSecure(true);
-$aliasRouter->setOneWay(true);
+//$aliasRouter->setSecure(true);
+//$aliasRouter->setOneWay(true);
 ```
 
 @layout.latte:
