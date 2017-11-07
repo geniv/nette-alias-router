@@ -2,6 +2,7 @@
 
 namespace AliasRouter\Bridges\Nette;
 
+use AliasRouter\AliasRouter;
 use AliasRouter\Bridges\Tracy\Panel;
 use AliasRouter\FilterSlug;
 use AliasRouter\Model;
@@ -19,6 +20,7 @@ class Extension extends CompilerExtension
     /** @var array default values */
     private $defaults = [
         'debugger'     => true,
+        'autowired'    => 'self',
         'tablePrefix'  => null,
         'domainSwitch' => false,
         'domainAlias'  => [],
@@ -33,13 +35,23 @@ class Extension extends CompilerExtension
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults);
 
-        // define model
+        // define router
         $builder->addDefinition($this->prefix('default'))
+            ->setFactory(AliasRouter::class, [$config]);
+
+        // define model
+        $builder->addDefinition($this->prefix('model'))
             ->setFactory(Model::class, [$config]);
 
         // define filter
         $builder->addDefinition($this->prefix('filter.slug'))
             ->setFactory(FilterSlug::class);
+
+        // if define autowired then set value
+        if (isset($config['autowired'])) {
+            $builder->getDefinition($this->prefix('default'))
+                ->setAutowired($config['autowired']);
+        }
 
         // define panel
         if (isset($config['debugger']) && $config['debugger']) {
@@ -63,7 +75,7 @@ class Extension extends CompilerExtension
 
         if (isset($config['debugger']) && $config['debugger']) {
             // linked panel to tracy
-            $builder->getDefinition($this->prefix('default'))
+            $builder->getDefinition($this->prefix('model'))
                 ->addSetup('?->register(?)', [$this->prefix('@panel'), '@self']);
         }
     }
