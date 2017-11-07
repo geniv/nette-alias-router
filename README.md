@@ -27,6 +27,7 @@ neon configure:
 # alias router
 aliasRouter:
 #	debugger: false
+#	autowired: self
     tablePrefix: %tablePrefix%
 #    domainSwitch: true
 #    domainAlias:
@@ -43,7 +44,9 @@ extensions:
 
 RouterFactory.php:
 ```php
-$router[] = $aliasRouter = new Router($this->context);
+public static function createRouter(Locale $locale, AliasRouter $aliasRouter): IRouter
+...
+$router[] = $aliasRouter;
 $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
 $aliasRouter->setSecure(true);
 $aliasRouter->setOneWay(true);

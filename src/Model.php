@@ -78,7 +78,7 @@ class Model
     /**
      * Get array url domains.
      *
-     * Use in Router::match().
+     * Use in AliasRouter::match().
      *
      * @return array
      */
@@ -91,7 +91,7 @@ class Model
     /**
      * Get parameters by locale and alias.
      *
-     * Use in Router::match().
+     * Use in AliasRouter::match().
      *
      * @param $locale
      * @param $alias
@@ -123,7 +123,7 @@ class Model
     /**
      * Get alias by presenter and parameters.
      *
-     * Use in Router::constructUrl().
+     * Use in AliasRouter::constructUrl().
      *
      * @param $presenter
      * @param $parameters
@@ -166,7 +166,7 @@ class Model
     /**
      * Get locale code, empty code for default locale.
      *
-     * Use in Router::constructUrl().
+     * Use in AliasRouter::constructUrl().
      *
      * @param $parameters
      * @return string

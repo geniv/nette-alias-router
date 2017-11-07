@@ -10,12 +10,12 @@ use Nette\Http\Url;
 
 
 /**
- * Class Router
+ * Class AliasRouter
  *
  * @author  geniv
  * @package AliasRouter
  */
-class Router implements IRouter
+class AliasRouter implements IRouter
 {
     /** @var bool default inactive https */
     private $secure = false;
@@ -28,13 +28,13 @@ class Router implements IRouter
 
 
     /**
-     * Router constructor.
+     * AliasRouter constructor.
      *
-     * @param Container $container
+     * @param Model $model
      */
-    public function __construct(Container $container)
+    public function __construct(Model $model)
     {
-        $this->model = $container->getByType(Model::class);
+        $this->model = $model;
     }
 
 
