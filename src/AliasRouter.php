@@ -128,7 +128,9 @@ class AliasRouter implements IRouter
         $parameters['locale'] = $locale;
 
         // akceptace adresy kde je na konci zbytecne lomitko, odebere posledni lomitko
-        $alias = rtrim($alias, '/_');
+        if ($alias) {
+            $alias = rtrim($alias, '/_');
+        }
 
         if ($alias) {
             // load parameters from database
