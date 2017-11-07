@@ -26,8 +26,8 @@ neon configure:
 ```neon
 # alias router
 aliasRouter:
-#   debugger: false     # default null, false => disable autowiring (in case multiple linked extension) | self
-#   autowired: self
+#   debugger: false     
+#   autowired: self     # default self, true|false|self|null
     tablePrefix: %tablePrefix%
 #    domainSwitch: true
 #    domainAlias:
