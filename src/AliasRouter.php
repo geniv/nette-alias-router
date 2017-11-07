@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AliasRouter;
 
@@ -40,10 +40,10 @@ class AliasRouter implements IRouter
     /**
      * Enable https, defalt is disable.
      *
-     * @param bool $secure
-     * @return $this
+     * @param $secure
+     * @return AliasRouter
      */
-    public function setSecure($secure)
+    public function setSecure($secure): self
     {
         $this->secure = $secure;
         return $this;
@@ -53,10 +53,10 @@ class AliasRouter implements IRouter
     /**
      * Enable one way router.
      *
-     * @param bool $oneWay
-     * @return $this
+     * @param $oneWay
+     * @return AliasRouter
      */
-    public function setOneWay($oneWay)
+    public function setOneWay($oneWay): self
     {
         $this->oneWay = $oneWay;
         return $this;
@@ -69,9 +69,9 @@ class AliasRouter implements IRouter
      * @param $presenter
      * @param $action
      * @param $locale
-     * @return $this
+     * @return AliasRouter
      */
-    public function setDefaultParameters($presenter, $action, $locale)
+    public function setDefaultParameters($presenter, $action, $locale): self
     {
         $this->defaultParameters = [
             'presenter' => $presenter,

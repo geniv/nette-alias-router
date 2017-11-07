@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AliasRouter;
 
@@ -82,7 +82,7 @@ class Model
      *
      * @return array
      */
-    public function getDomain()
+    public function getDomain(): array
     {
         return $this->domain;
     }
@@ -171,7 +171,7 @@ class Model
      * @param $parameters
      * @return string
      */
-    public function getCodeLocale($parameters)
+    public function getCodeLocale($parameters): string
     {
         // null locale => empty locale in url
         if (!isset($parameters['locale'])) {
