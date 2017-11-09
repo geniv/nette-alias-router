@@ -26,7 +26,7 @@ neon configure:
 ```neon
 # alias router
 aliasRouter:
-#   debugger: false     
+#   debugger: false
 #   autowired: self     # default self, true|false|self|null
     tablePrefix: %tablePrefix%
 #    domainSwitch: true
