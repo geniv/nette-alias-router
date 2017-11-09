@@ -21,13 +21,12 @@ require:
 
 Include in application
 ----------------------
-
 neon configure:
 ```neon
 # alias router
 aliasRouter:
-#	debugger: false
-#	autowired: self
+#   debugger: false     
+#   autowired: self     # default self, true|false|self|null
     tablePrefix: %tablePrefix%
 #    domainSwitch: true
 #    domainAlias:
@@ -52,7 +51,7 @@ $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
 //$aliasRouter->setOneWay(true);
 ```
 
-@layout.latte:
+usage @layout.latte:
 ```latte
 {if $presenter->context->hasService('aliasRouter.default')}
     {ifset slug}
