@@ -51,7 +51,7 @@ $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
 //$aliasRouter->setOneWay(true);
 ```
 
-@layout.latte:
+usage @layout.latte:
 ```latte
 {if $presenter->context->hasService('aliasRouter.default')}
     {ifset slug}
