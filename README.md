@@ -21,7 +21,6 @@ require:
 
 Include in application
 ----------------------
-
 neon configure:
 ```neon
 # alias router
