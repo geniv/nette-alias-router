@@ -6,6 +6,7 @@ use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
+use Nette\SmartObject;
 
 
 /**
@@ -16,6 +17,8 @@ use Nette\Http\Url;
  */
 class AliasRouter implements IRouter
 {
+    use SmartObject;
+
     /** @var bool default inactive https */
     private $secure = false;
     /** @var bool default inactive one way router */
@@ -43,7 +46,7 @@ class AliasRouter implements IRouter
      * @param $secure
      * @return AliasRouter
      */
-    public function setSecure($secure): self
+    public function setSecure(bool $secure): self
     {
         $this->secure = $secure;
         return $this;
@@ -56,7 +59,7 @@ class AliasRouter implements IRouter
      * @param $oneWay
      * @return AliasRouter
      */
-    public function setOneWay($oneWay): self
+    public function setOneWay(bool $oneWay): self
     {
         $this->oneWay = $oneWay;
         return $this;
@@ -66,12 +69,12 @@ class AliasRouter implements IRouter
     /**
      * Set default parameters, presenter, action and locale.
      *
-     * @param $presenter
-     * @param $action
-     * @param $locale
+     * @param string $presenter
+     * @param string $action
+     * @param string $locale
      * @return AliasRouter
      */
-    public function setDefaultParameters($presenter, $action, $locale): self
+    public function setDefaultParameters(string $presenter, string $action, string $locale): self
     {
         $this->defaultParameters = [
             'presenter' => $presenter,
