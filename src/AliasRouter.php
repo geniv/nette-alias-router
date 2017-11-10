@@ -6,6 +6,7 @@ use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
+use Nette\SmartObject;
 
 
 /**
@@ -16,6 +17,8 @@ use Nette\Http\Url;
  */
 class AliasRouter implements IRouter
 {
+    use SmartObject;
+
     /** @var bool default inactive https */
     private $secure = false;
     /** @var bool default inactive one way router */
@@ -24,6 +27,8 @@ class AliasRouter implements IRouter
     private $model;
     /** @var array default parameters */
     private $defaultParameters = [];
+    /** @var string paginator variable */
+    private $praginatorVariable = 'vp';
 
 
     /**
@@ -43,7 +48,7 @@ class AliasRouter implements IRouter
      * @param $secure
      * @return AliasRouter
      */
-    public function setSecure($secure): self
+    public function setSecure(bool $secure): self
     {
         $this->secure = $secure;
         return $this;
@@ -56,7 +61,7 @@ class AliasRouter implements IRouter
      * @param $oneWay
      * @return AliasRouter
      */
-    public function setOneWay($oneWay): self
+    public function setOneWay(bool $oneWay): self
     {
         $this->oneWay = $oneWay;
         return $this;
@@ -66,18 +71,31 @@ class AliasRouter implements IRouter
     /**
      * Set default parameters, presenter, action and locale.
      *
-     * @param $presenter
-     * @param $action
-     * @param $locale
+     * @param string $presenter
+     * @param string $action
+     * @param string $locale
      * @return AliasRouter
      */
-    public function setDefaultParameters($presenter, $action, $locale): self
+    public function setDefaultParameters(string $presenter, string $action, string $locale): self
     {
         $this->defaultParameters = [
             'presenter' => $presenter,
             'action'    => $action,
             'locale'    => $locale,
         ];
+        return $this;
+    }
+
+
+    /**
+     * Set paginator variable.
+     *
+     * @param string $variable
+     * @return AliasRouter
+     */
+    public function setPaginatorVariable(string $variable): self
+    {
+        $this->praginatorVariable = $variable;
         return $this;
     }
 
@@ -116,9 +134,9 @@ class AliasRouter implements IRouter
         }
 
         // parse paginator
-        $vp = null;
+        $parameters = [];
         if (preg_match('/((?<vp>[a-z0-9-]+)(\/)?)?/', $pathInfo, $m) && isset($m['vp'])) {
-            $parameters['vp'] = trim($m['vp'], '/_');
+            $parameters[$this->praginatorVariable] = trim($m['vp'], '/_');
         }
 
         // set default presenter
@@ -181,9 +199,9 @@ class AliasRouter implements IRouter
             $parameters = $appRequest->parameters;
 
             $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias]));
-            $alias = trim(isset($parameters['vp']) ? implode('_', [$part, $parameters['vp']]) : $part, '/_');
+            $alias = trim(isset($parameters[$this->praginatorVariable]) ? implode('_', [$part, $parameters[$this->praginatorVariable]]) : $part, '/_');
 
-            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters['vp']);
+            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->praginatorVariable]);
 
             // create url address
             $url = new Url($refUrl->getBaseUrl() . $alias);

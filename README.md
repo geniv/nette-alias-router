@@ -1,5 +1,6 @@
 Alias router
-===============
+============
+Database alias router
 
 Installation
 ------------
@@ -13,7 +14,7 @@ or
 
 require:
 ```json
-"php": ">=5.6.0",
+"php": ">=7.0.0",
 "nette/nette": ">=2.4.0",
 "dibi/dibi": ">=3.0.0",
 "geniv/nette-locale": ">=1.0.0"
@@ -25,7 +26,7 @@ neon configure:
 ```neon
 # alias router
 aliasRouter:
-#   debugger: false     
+#   debugger: false
 #   autowired: self     # default self, true|false|self|null
     tablePrefix: %tablePrefix%
 #    domainSwitch: true
@@ -47,6 +48,7 @@ public static function createRouter(Locale $locale, AliasRouter $aliasRouter): I
 ...
 $router[] = $aliasRouter;
 $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
+$aliasRouter->setPaginatorVariable('visualPaginator-page');
 //$aliasRouter->setSecure(true);
 //$aliasRouter->setOneWay(true);
 ```
