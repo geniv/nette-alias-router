@@ -27,6 +27,8 @@ class AliasRouter implements IRouter
     private $model;
     /** @var array default parameters */
     private $defaultParameters = [];
+    /** @var string paginator variable */
+    private $praginatorVariable = 'vp';
 
 
     /**
@@ -86,6 +88,19 @@ class AliasRouter implements IRouter
 
 
     /**
+     * Set paginator variable.
+     *
+     * @param string $variable
+     * @return AliasRouter
+     */
+    public function setPaginatorVariable(string $variable): self
+    {
+        $this->praginatorVariable = $variable;
+        return $this;
+    }
+
+
+    /**
      * Maps HTTP request to a Request object.
      *
      * @param IRequest $httpRequest
@@ -119,9 +134,9 @@ class AliasRouter implements IRouter
         }
 
         // parse paginator
-        $vp = null;
+        $parameters = [];
         if (preg_match('/((?<vp>[a-z0-9-]+)(\/)?)?/', $pathInfo, $m) && isset($m['vp'])) {
-            $parameters['vp'] = trim($m['vp'], '/_');
+            $parameters[$this->praginatorVariable] = trim($m['vp'], '/_');
         }
 
         // set default presenter
@@ -184,9 +199,9 @@ class AliasRouter implements IRouter
             $parameters = $appRequest->parameters;
 
             $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias]));
-            $alias = trim(isset($parameters['vp']) ? implode('_', [$part, $parameters['vp']]) : $part, '/_');
+            $alias = trim(isset($parameters[$this->praginatorVariable]) ? implode('_', [$part, $parameters[$this->praginatorVariable]]) : $part, '/_');
 
-            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters['vp']);
+            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->praginatorVariable]);
 
             // create url address
             $url = new Url($refUrl->getBaseUrl() . $alias);

@@ -171,7 +171,7 @@ class Model
      * @param $parameters
      * @return string
      */
-    public function getCodeLocale($parameters): string
+    public function getCodeLocale(array $parameters): string
     {
         // null locale => empty locale in url
         if (!isset($parameters['locale'])) {
