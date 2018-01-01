@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace AliasRouter;
 
@@ -46,9 +46,9 @@ class AliasRouter implements IRouter
      * Enable https, defalt is disable.
      *
      * @param $secure
-     * @return AliasRouter
+     * @return $this
      */
-    public function setSecure(bool $secure): self
+    public function setSecure($secure)
     {
         $this->secure = $secure;
         return $this;
@@ -59,9 +59,9 @@ class AliasRouter implements IRouter
      * Enable one way router.
      *
      * @param $oneWay
-     * @return AliasRouter
+     * @return $this
      */
-    public function setOneWay(bool $oneWay): self
+    public function setOneWay($oneWay)
     {
         $this->oneWay = $oneWay;
         return $this;
@@ -71,12 +71,12 @@ class AliasRouter implements IRouter
     /**
      * Set default parameters, presenter, action and locale.
      *
-     * @param string $presenter
-     * @param string $action
-     * @param string $locale
-     * @return AliasRouter
+     * @param $presenter
+     * @param $action
+     * @param $locale
+     * @return $this
      */
-    public function setDefaultParameters(string $presenter, string $action, string $locale): self
+    public function setDefaultParameters($presenter, $action, $locale)
     {
         $this->defaultParameters = [
             'presenter' => $presenter,
@@ -90,10 +90,10 @@ class AliasRouter implements IRouter
     /**
      * Set paginator variable.
      *
-     * @param string $variable
-     * @return AliasRouter
+     * @param $variable
+     * @return $this
      */
-    public function setPaginatorVariable(string $variable): self
+    public function setPaginatorVariable($variable)
     {
         $this->praginatorVariable = $variable;
         return $this;
