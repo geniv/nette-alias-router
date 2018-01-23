@@ -13,18 +13,21 @@ use Nette\Application\UI\Presenter;
  */
 class InternalRouterPresenter extends Presenter
 {
+    /** @var string */
     private $name;
 
 
     /**
      * InternalRouterPresenter constructor.
      *
-     * @param       $name
-     * @param       $action
-     * @param array $parameters
+     * @param string $name
+     * @param string $action
+     * @param array  $parameters
      */
-    public function __construct($name, $action, array $parameters = [])
+    public function __construct($name = '', $action = '', array $parameters = [])
     {
+        parent::__construct();
+
         $this->name = $name;
         $this->params = $parameters;    // define in Nette\Application\UI\Component
         $this->params['action'] = $action;
