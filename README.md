@@ -44,7 +44,7 @@ extensions:
 
 RouterFactory.php:
 ```php
-public static function createRouter(Locale $locale, AliasRouter $aliasRouter): IRouter
+public static function createRouter(ILocale $locale, AliasRouter $aliasRouter): IRouter
 ...
 $router[] = $aliasRouter;
 $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');

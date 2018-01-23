@@ -4,7 +4,7 @@ namespace AliasRouter\Bridges\Tracy;
 
 use AliasRouter\Model;
 use Latte\Engine;
-use Locale\Locale;
+use Locale\ILocale;
 use Nette\Application\Application;
 use Nette\DI\Container;
 use Nette\SmartObject;
@@ -69,7 +69,7 @@ class Panel implements IBarPanel
      */
     public function getPanel()
     {
-        $locale = $this->container->getByType(Locale::class);   // nacteni lokalizacni sluzby
+        $locale = $this->container->getByType(ILocale::class);   // nacteni lokalizacni sluzby
         $application = $this->container->getByType(Application::class);    // nacteni aplikace
         $presenter = $application->getPresenter();
 

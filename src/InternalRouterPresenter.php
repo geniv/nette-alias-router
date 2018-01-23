@@ -6,24 +6,25 @@ use Nette\Application\UI\Presenter;
 
 
 /**
- * Class InternalRouterPresetner
+ * Class InternalRouterPresenter
  *
  * @author  geniv
  * @package AliasRouter
  */
-class InternalRouterPresetner extends Presenter
+class InternalRouterPresenter extends Presenter
 {
     private $name;
+    private $params;
 
 
     /**
-     * InternalRouterPresetner constructor.
+     * InternalRouterPresenter constructor.
      *
      * @param       $name
      * @param       $action
      * @param array $parameters
      */
-    public function __construct($name, $action, $parameters = [])
+    public function __construct($name, $action, array $parameters = [])
     {
         $this->name = $name;
         $this->params = $parameters;

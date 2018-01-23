@@ -6,7 +6,7 @@ use Dibi;
 use Dibi\Connection;
 use Dibi\UniqueConstraintViolationException;
 use Exception;
-use Locale\Locale;
+use Locale\ILocale;
 use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
@@ -33,8 +33,8 @@ class Model
     private $tableRouter, $tableRouterAlias;
     /** @var Connection database from DI */
     private $connection;
-    /** @var LocaleService locale service */
-    private $localeService;
+    /** @var ILocale locale service */
+    private $locale;
     /** @var Cache data cache */
     private $cache;
     /** @var array domain locale switch */
@@ -46,11 +46,11 @@ class Model
      *
      * @param array      $parameters
      * @param Connection $connection
-     * @param Locale     $locale
+     * @param ILocale    $locale
      * @param IStorage   $storage
      * @throws Exception
      */
-    public function __construct(array $parameters, Connection $connection, Locale $locale, IStorage $storage)
+    public function __construct(array $parameters, Connection $connection, ILocale $locale, IStorage $storage)
     {
         // pokud jeden z parametru domainSwitch nebo domainAlias neexistuje
         if (isset($parameters['domainSwitch']) XOR isset($parameters['domainAlias'])) {
@@ -70,7 +70,7 @@ class Model
         $this->tableRouterAlias = $parameters['tablePrefix'] . self::TABLE_NAME_ALIAS;
 
         $this->connection = $connection;
-        $this->localeService = $locale;
+        $this->locale = $locale;
         $this->cache = new Cache($storage, 'cache-AliasRouter-Model');
     }
 
@@ -106,7 +106,7 @@ class Model
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->where([
-                    'a.id_locale%iN' => $this->localeService->getIdByCode($locale),
+                    'a.id_locale%iN' => $this->locale->getIdByCode($locale),
                     'a.alias'        => $alias,
                 ])
                 ->fetch();
@@ -139,7 +139,7 @@ class Model
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->where([
                     'r.presenter'    => $presenter,
-                    'a.id_locale%iN' => $this->localeService->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : null),
+                    'a.id_locale%iN' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : null),
                 ])
                 ->orderBy('a.added')->desc();
 
@@ -180,7 +180,7 @@ class Model
 
         $domain = $this->getDomain();
         // nuluje lokalizaci pri hlavnim jazyku a domain switch
-        if (isset($parameters['locale']) && $parameters['locale'] == $this->localeService->getCodeDefault() || ($domain && $domain['switch'])) {
+        if (isset($parameters['locale']) && $parameters['locale'] == $this->locale->getCodeDefault() || ($domain && $domain['switch'])) {
             return '';
         }
         return $parameters['locale'];
@@ -312,7 +312,7 @@ class Model
         $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
             $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
-            $result = $this->getIdRouterAlias($idRouter, $this->localeService->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
+            $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
         }
         return $result;
     }
@@ -329,7 +329,7 @@ class Model
      */
     public function createRouter($presenter, $action, $alias, $parameters = [])
     {
-        return $this->insertAlias(new InternalRouterPresetner($presenter, $action, $parameters), $alias);
+        return $this->insertAlias(new InternalRouterPresenter($presenter, $action, $parameters), $alias);
     }
 
 
