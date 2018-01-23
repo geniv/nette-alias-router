@@ -14,7 +14,6 @@ use Nette\Application\UI\Presenter;
 class InternalRouterPresenter extends Presenter
 {
     private $name;
-    private $params;
 
 
     /**
@@ -27,7 +26,7 @@ class InternalRouterPresenter extends Presenter
     public function __construct($name, $action, array $parameters = [])
     {
         $this->name = $name;
-        $this->params = $parameters;
+        $this->params = $parameters;    // define in Nette\Application\UI\Component
         $this->params['action'] = $action;
     }
 
