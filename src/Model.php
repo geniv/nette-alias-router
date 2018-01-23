@@ -195,6 +195,7 @@ class Model
      * @param $presenter
      * @param $action
      * @return mixed
+     * @throws Dibi\Exception
      */
     private function getIdRouter($presenter, $action)
     {
@@ -235,6 +236,7 @@ class Model
      * @param $idItem
      * @param $alias
      * @return mixed
+     * @throws Dibi\Exception
      */
     private function getIdRouterAlias($idRouter, $idLocale, $idItem, $alias)
     {
@@ -341,6 +343,7 @@ class Model
      * @param null  $alias
      * @param array $parameters
      * @return mixed|null
+     * @throws Dibi\Exception
      */
     public function deleteRouter($presenter = null, $action = null, $alias = null, $parameters = [])
     {
