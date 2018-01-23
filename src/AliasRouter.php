@@ -43,7 +43,7 @@ class AliasRouter implements IRouter
 
 
     /**
-     * Enable https, defalt is disable.
+     * Enable https, default is disable.
      *
      * @param $secure
      * @return $this
