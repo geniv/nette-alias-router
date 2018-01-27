@@ -2,7 +2,7 @@
 
 namespace AliasRouter\Bridges\Tracy;
 
-use AliasRouter\Model;
+use AliasRouter\RouterModel;
 use Latte\Engine;
 use Locale\ILocale;
 use Nette\Application\Application;
@@ -21,8 +21,9 @@ use Tracy\IBarPanel;
 class Panel implements IBarPanel
 {
     use SmartObject;
-
-    private $model;
+    /** @var RouterModel */
+    private $routerModel;
+    /** @var Container */
     private $container;
 
 
@@ -40,11 +41,11 @@ class Panel implements IBarPanel
     /**
      * Register to Tracy.
      *
-     * @param Model $model
+     * @param RouterModel $routerModel
      */
-    public function register(Model $model)
+    public function register(RouterModel $routerModel)
     {
-        $this->model = $model;
+        $this->routerModel = $routerModel;
         Debugger::getBar()->addPanel($this);
     }
 
@@ -74,8 +75,8 @@ class Panel implements IBarPanel
         $presenter = $application->getPresenter();
 
         $params = [
-            'routerClass' => get_class($this->model),
-            'routes'      => ($presenter ? $this->model->getRouterAlias($presenter, $locale->getId()) : []),
+            'routerClass' => get_class($this->routerModel),
+            'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $locale->getId()) : []),
         ];
 
         $latte = new Engine;

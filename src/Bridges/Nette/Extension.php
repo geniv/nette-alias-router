@@ -5,7 +5,7 @@ namespace AliasRouter\Bridges\Nette;
 use AliasRouter\AliasRouter;
 use AliasRouter\Bridges\Tracy\Panel;
 use AliasRouter\FilterSlug;
-use AliasRouter\Model;
+use AliasRouter\RouterModel;
 use Nette\DI\CompilerExtension;
 
 
@@ -41,7 +41,7 @@ class Extension extends CompilerExtension
 
         // define model
         $builder->addDefinition($this->prefix('model'))
-            ->setFactory(Model::class, [$config]);
+            ->setFactory(RouterModel::class, [$config]);
 
         // define filter
         $builder->addDefinition($this->prefix('filter.slug'))

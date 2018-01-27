@@ -15,12 +15,12 @@ use Nette\Utils\Strings;
 
 
 /**
- * Class Model
+ * Class RouterModel
  *
  * @author  geniv
  * @package AliasRouter
  */
-class Model
+class RouterModel
 {
     use SmartObject;
 
@@ -71,7 +71,7 @@ class Model
 
         $this->connection = $connection;
         $this->locale = $locale;
-        $this->cache = new Cache($storage, 'cache-AliasRouter-Model');
+        $this->cache = new Cache($storage, 'cache-AliasRouter-RouterModel');
     }
 
 
@@ -190,7 +190,7 @@ class Model
     /**
      * Internal insert and get id route by presenter and action.
      *
-     * Use in Model::insertAlias().
+     * Use in RouterModel::insertAlias().
      *
      * @param $presenter
      * @param $action
@@ -229,7 +229,7 @@ class Model
     /**
      * Internal insert and get id router alias by id router, id locale, id item and alias.
      *
-     * Use in Model::insertAlias().
+     * Use in RouterModel::insertAlias().
      *
      * @param $idRouter
      * @param $idLocale

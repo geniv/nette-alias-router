@@ -17,8 +17,8 @@ class FilterSlug
 {
     use SmartObject;
 
-    /** @var Model router model */
-    private $model;
+    /** @var RouterModel router model */
+    private $routerModel;
     /** @var Application current application */
     private $application;
 
@@ -26,12 +26,12 @@ class FilterSlug
     /**
      * FilterSlug constructor.
      *
-     * @param Model       $model
+     * @param RouterModel $routerModel
      * @param Application $application
      */
-    public function __construct(Model $model, Application $application)
+    public function __construct(RouterModel $routerModel, Application $application)
     {
-        $this->model = $model;
+        $this->routerModel = $routerModel;
         $this->application = $application;
     }
 
@@ -41,10 +41,11 @@ class FilterSlug
      *
      * @param FilterInfo $info
      * @param            $string
+     * @throws \Dibi\Exception
      */
     public function __invoke(FilterInfo $info, $string)
     {
         $presenter = $this->application->getPresenter();
-        $this->model->insertAlias($presenter, $string);
+        $this->routerModel->insertAlias($presenter, $string);
     }
 }

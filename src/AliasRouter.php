@@ -23,8 +23,8 @@ class AliasRouter implements IRouter
     private $secure = false;
     /** @var bool default inactive one way router */
     private $oneWay = false;
-    /** @var Model router model */
-    private $model;
+    /** @var RouterModel router model */
+    private $routerModel;
     /** @var array default parameters */
     private $defaultParameters = [];
     /** @var string paginator variable */
@@ -34,11 +34,11 @@ class AliasRouter implements IRouter
     /**
      * AliasRouter constructor.
      *
-     * @param Model $model
+     * @param RouterModel $model
      */
-    public function __construct(Model $model)
+    public function __construct(RouterModel $model)
     {
-        $this->model = $model;
+        $this->routerModel = $model;
     }
 
 
@@ -118,7 +118,7 @@ class AliasRouter implements IRouter
         }
 
         // vyber jazyka podle domeny
-        $domain = $this->model->getDomain();
+        $domain = $this->routerModel->getDomain();
         if ($domain && $domain['switch']) {
             $host = $httpRequest->url->host;    // nacteni url hostu pro zvoleni jazyka
             if (isset($domain['alias'][$host])) {
@@ -152,7 +152,7 @@ class AliasRouter implements IRouter
 
         if ($alias) {
             // load parameters from database
-            $param = $this->model->getParametersByAlias($locale, $alias);
+            $param = $this->routerModel->getParametersByAlias($locale, $alias);
             if ($param) {
                 $presenter = $param->presenter;
                 $parameters['action'] = $param->action;
@@ -194,11 +194,11 @@ class AliasRouter implements IRouter
             return null;
         }
 
-        $param = $this->model->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
+        $param = $this->routerModel->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
         if ($param) {
             $parameters = $appRequest->parameters;
 
-            $part = implode('/', array_filter([$this->model->getCodeLocale($parameters), $param->alias]));
+            $part = implode('/', array_filter([$this->routerModel->getCodeLocale($parameters), $param->alias]));
             $alias = trim(isset($parameters[$this->paginatorVariable]) ? implode('_', [$part, $parameters[$this->paginatorVariable]]) : $part, '/_');
 
             unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->paginatorVariable]);
@@ -210,7 +210,7 @@ class AliasRouter implements IRouter
             return $url->getAbsoluteUrl();
         } else {
             // vyber jazyka podle domeny
-            $domain = $this->model->getDomain();
+            $domain = $this->routerModel->getDomain();
             // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
             // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
             if ($domain && $domain['switch'] && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {

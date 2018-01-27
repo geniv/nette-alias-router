@@ -64,7 +64,7 @@ usage @layout.latte:
 
 manual create or delete:
 ```php
-use AliasRouter\Model;
-$this->context->getByType(Model::class)->createRouter('Homepage', 'default', 'muj alias');
-$this->context->getByType(Model::class)->deleteRouter('Homepage', 'default');
+use AliasRouter\RouterModel;
+$this->context->getByType(RouterModel::class)->createRouter('Homepage', 'default', 'muj alias');
+$this->context->getByType(RouterModel::class)->deleteRouter('Homepage', 'default');
 ```
