@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
 --
--- Počítač: localhost
--- Vytvořeno: Ned 28. kvě 2017, 23:50
--- Verze serveru: 10.0.29-MariaDB-0ubuntu0.16.04.1
--- Verze PHP: 7.0.15-0ubuntu0.16.04.4
+-- Počítač: localhost:3306
+-- Vytvořeno: Sob 27. led 2018, 20:24
+-- Verze serveru: 10.1.26-MariaDB-0+deb9u1
+-- Verze PHP: 7.0.27-0+deb9u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `prefix_router` (
-  `id` int(11) NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `presenter` varchar(50) DEFAULT NULL COMMENT 'prezenter',
   `action` varchar(50) DEFAULT NULL COMMENT 'akce'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='routy';
@@ -51,7 +51,7 @@ ALTER TABLE `prefix_router`
 -- AUTO_INCREMENT pro tabulku `prefix_router`
 --
 ALTER TABLE `prefix_router`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
