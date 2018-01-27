@@ -307,6 +307,7 @@ class Model
      * @param Presenter $presenter
      * @param           $alias
      * @return mixed|null
+     * @throws Dibi\Exception
      */
     public function insertAlias(Presenter $presenter, $alias)
     {
@@ -328,6 +329,7 @@ class Model
      * @param       $alias
      * @param array $parameters
      * @return mixed|null
+     * @throws Dibi\Exception
      */
     public function createRouter($presenter, $action, $alias, $parameters = [])
     {
