@@ -190,7 +190,8 @@ class AliasRouter implements IRouter
      */
     public function constructUrl(Request $appRequest, Url $refUrl)
     {
-        if ($this->oneWay) {
+        // in one way mode or ignore ajax request
+        if ($this->oneWay || isset($appRequest->parameters['do'])) {
             return null;
         }
 
