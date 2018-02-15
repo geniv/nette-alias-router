@@ -20,7 +20,7 @@ class Extension extends CompilerExtension
     /** @var array default values */
     private $defaults = [
         'debugger'     => true,
-        'autowired'    => 'self',
+        'autowired'    => null,
         'tablePrefix'  => null,
         'domainSwitch' => false,
         'domainAlias'  => [],
@@ -37,26 +37,24 @@ class Extension extends CompilerExtension
 
         // define router
         $builder->addDefinition($this->prefix('default'))
-            ->setFactory(AliasRouter::class);
+            ->setFactory(AliasRouter::class)
+            ->setAutowired($config['autowired']);
 
         // define model
         $builder->addDefinition($this->prefix('model'))
-            ->setFactory(RouterModel::class, [$config]);
+            ->setFactory(RouterModel::class, [$config])
+            ->setAutowired($config['autowired']);
 
         // define filter
         $builder->addDefinition($this->prefix('filter.slug'))
-            ->setFactory(FilterSlug::class);
-
-        // if define autowired then set value
-        if (isset($config['autowired'])) {
-            $builder->getDefinition($this->prefix('default'))
-                ->setAutowired($config['autowired']);
-        }
+            ->setFactory(FilterSlug::class)
+            ->setAutowired($config['autowired']);
 
         // define panel
         if (isset($config['debugger']) && $config['debugger']) {
             $builder->addDefinition($this->prefix('panel'))
-                ->setFactory(Panel::class);
+                ->setFactory(Panel::class)
+                ->setAutowired($config['autowired']);
         }
     }
 
