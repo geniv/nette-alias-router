@@ -20,7 +20,7 @@ class Extension extends CompilerExtension
     /** @var array default values */
     private $defaults = [
         'debugger'     => true,
-        'autowired'    => null,
+        'autowired'    => 'self',
         'tablePrefix'  => null,
         'domainSwitch' => false,
         'domainAlias'  => [],
