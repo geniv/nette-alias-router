@@ -139,7 +139,7 @@ class RouterModel
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->where([
                     'r.presenter'    => $presenter,
-                    'a.id_locale%iN' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : null),
+                    'a.id_locale%iN' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
                 ])
                 ->orderBy('a.added')->desc();
 
