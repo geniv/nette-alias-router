@@ -264,11 +264,11 @@ class RouterModel
         if (!$id) {
             try {
                 $id = $this->connection->insert($this->tableRouterAlias, [
-                    'id_router' => $idRouter,
-                    'id_locale' => $idLocale,
-                    'id_item'   => $idItem,
-                    'alias'     => $alias,
-                    'added%sql' => 'NOW()',
+                    'id_router'    => $idRouter,
+                    'id_locale%iN' => $idLocale,
+                    'id_item'      => $idItem,
+                    'alias'        => $alias,
+                    'added%sql'    => 'NOW()',
                 ])->execute(Dibi::IDENTIFIER);
             } catch (UniqueConstraintViolationException $e) {
                 // recursive resolve duplicate alias
