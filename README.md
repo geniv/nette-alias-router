@@ -1,6 +1,5 @@
 Alias router
 ============
-Database alias router
 
 Installation
 ------------

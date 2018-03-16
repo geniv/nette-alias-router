@@ -6,7 +6,6 @@ use AliasRouter\RouterModel;
 use Latte\Engine;
 use Locale\ILocale;
 use Nette\Application\Application;
-use Nette\DI\Container;
 use Nette\SmartObject;
 use Tracy\Debugger;
 use Tracy\IBarPanel;
@@ -23,18 +22,22 @@ class Panel implements IBarPanel
     use SmartObject;
     /** @var RouterModel */
     private $routerModel;
-    /** @var Container */
-    private $container;
+    /** @var Application */
+    private $application;
+    /** @var int */
+    private $locale;
 
 
     /**
      * Panel constructor.
      *
-     * @param Container $container
+     * @param Application $application
+     * @param ILocale     $locale
      */
-    public function __construct(Container $container)
+    public function __construct(Application $application, ILocale $locale)
     {
-        $this->container = $container;
+        $this->application = $application;
+        $this->locale = $locale->getId();
     }
 
 
@@ -71,13 +74,12 @@ class Panel implements IBarPanel
      */
     public function getPanel()
     {
-        $locale = $this->container->getByType(ILocale::class);   // nacteni lokalizacni sluzby
-        $application = $this->container->getByType(Application::class);    // nacteni aplikace
-        $presenter = $application->getPresenter();
+        $presenter = $this->application->getPresenter();
 
         $params = [
             'routerClass' => get_class($this->routerModel),
-            'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $locale->getId()) : []),
+            'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
+            'urlId'       => $presenter->getParameter('id'),
         ];
 
         $latte = new Engine;
