@@ -26,8 +26,8 @@ class RouterModel
 
     // define constant table names
     const
-        TABLE_NAME = 'router',
-        TABLE_NAME_ALIAS = 'router_alias';
+        TABLE = 'router',
+        TABLE_ALIAS = 'router_alias';
 
     /** @var string tables name */
     private $tableRouter, $tableRouterAlias;
@@ -66,8 +66,8 @@ class RouterModel
         }
 
         // define table names
-        $this->tableRouter = $parameters['tablePrefix'] . self::TABLE_NAME;
-        $this->tableRouterAlias = $parameters['tablePrefix'] . self::TABLE_NAME_ALIAS;
+        $this->tableRouter = $parameters['tablePrefix'] . self::TABLE;
+        $this->tableRouterAlias = $parameters['tablePrefix'] . self::TABLE_ALIAS;
 
         $this->connection = $connection;
         $this->locale = $locale;

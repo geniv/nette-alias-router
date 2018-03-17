@@ -17,9 +17,9 @@ class FilterSlug
 {
     use SmartObject;
 
-    /** @var RouterModel router model */
+    /** @var RouterModel */
     private $routerModel;
-    /** @var Application current application */
+    /** @var Application */
     private $application;
 
 

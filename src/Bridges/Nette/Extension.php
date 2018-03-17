@@ -75,6 +75,10 @@ class Extension extends CompilerExtension
             // linked panel to tracy
             $builder->getDefinition($this->prefix('model'))
                 ->addSetup('?->register(?)', [$this->prefix('@panel'), '@self']);
+
+            // linked to application request
+            $builder->getDefinition('application.application')
+                ->addSetup('$service->onRequest[] = ?', [[$this->prefix('@panel'), 'onRequest']]);
         }
     }
 }
