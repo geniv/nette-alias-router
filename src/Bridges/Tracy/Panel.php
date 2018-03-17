@@ -6,6 +6,7 @@ use AliasRouter\RouterModel;
 use Latte\Engine;
 use Locale\ILocale;
 use Nette\Application\Application;
+use Nette\Application\Request;
 use Nette\SmartObject;
 use Tracy\Debugger;
 use Tracy\IBarPanel;
@@ -25,19 +26,17 @@ class Panel implements IBarPanel
     /** @var Application */
     private $application;
     /** @var int */
-    private $locale;
+    private $idLocale;
 
 
     /**
      * Panel constructor.
      *
-     * @param Application $application
-     * @param ILocale     $locale
+     * @param ILocale $locale
      */
-    public function __construct(Application $application, ILocale $locale)
+    public function __construct(ILocale $locale)
     {
-        $this->application = $application;
-        $this->locale = $locale->getId();
+        $this->idLocale = $locale->getId();
     }
 
 
@@ -50,6 +49,18 @@ class Panel implements IBarPanel
     {
         $this->routerModel = $routerModel;
         Debugger::getBar()->addPanel($this);
+    }
+
+
+    /**
+     * On request.
+     *
+     * @param Application $application
+     * @param Request     $request
+     */
+    public function onRequest(Application $application, Request $request)
+    {
+        $this->application = $application;
     }
 
 
@@ -78,7 +89,7 @@ class Panel implements IBarPanel
 
         $params = [
             'routerClass' => get_class($this->routerModel),
-            'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
+            'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->idLocale) : []),
             'urlId'       => $presenter->getParameter('id'),
         ];
 
