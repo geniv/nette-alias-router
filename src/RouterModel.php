@@ -106,8 +106,8 @@ class RouterModel
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->where([
-                    'a.id_locale%iN' => $this->locale->getIdByCode($locale),
-                    'a.alias'        => $alias,
+                    'a.id_locale' => $this->locale->getIdByCode($locale),
+                    'a.alias'     => $alias,
                 ])
                 ->fetch();
 
@@ -138,8 +138,8 @@ class RouterModel
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->where([
-                    'r.presenter'    => $presenter,
-                    'a.id_locale%iN' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
+                    'r.presenter' => $presenter,
+                    'a.id_locale' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
                 ])
                 ->orderBy('a.added')->desc();
 
@@ -246,9 +246,9 @@ class RouterModel
             $cursor = $this->connection->select('id')
                 ->from($this->tableRouterAlias)
                 ->where([
-                    'id_router'    => $idRouter,
-                    'id_locale%iN' => $idLocale,
-                    'alias'        => $alias,
+                    'id_router' => $idRouter,
+                    'id_locale' => $idLocale,
+                    'alias'     => $alias,
                 ]);
             if ($idItem) {
                 $cursor->where(['id_item' => $idItem]);
@@ -264,11 +264,11 @@ class RouterModel
         if (!$id) {
             try {
                 $id = $this->connection->insert($this->tableRouterAlias, [
-                    'id_router'    => $idRouter,
-                    'id_locale%iN' => $idLocale,
-                    'id_item'      => $idItem,
-                    'alias'        => $alias,
-                    'added%sql'    => 'NOW()',
+                    'id_router' => $idRouter,
+                    'id_locale' => $idLocale,
+                    'id_item'   => $idItem,
+                    'alias'     => $alias,
+                    'added%sql' => 'NOW()',
                 ])->execute(Dibi::IDENTIFIER);
             } catch (UniqueConstraintViolationException $e) {
                 // recursive resolve duplicate alias
@@ -396,8 +396,8 @@ class RouterModel
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->where([
-                'r.presenter'    => $presenter->getName(),
-                'a.id_locale%iN' => $idLocale,
+                'r.presenter' => $presenter->getName(),
+                'a.id_locale' => $idLocale,
             ])
             ->orderBy('a.added')->desc();
 
