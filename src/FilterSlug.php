@@ -42,6 +42,8 @@ class FilterSlug
      * @param FilterInfo $info
      * @param            $string
      * @throws \Dibi\Exception
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function __invoke(FilterInfo $info, $string)
     {
