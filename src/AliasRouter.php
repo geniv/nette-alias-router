@@ -105,6 +105,8 @@ class AliasRouter implements IRouter
      *
      * @param IRequest $httpRequest
      * @return Request|NULL
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function match(IRequest $httpRequest)
     {
@@ -187,6 +189,8 @@ class AliasRouter implements IRouter
      * @param Request $appRequest
      * @param Url     $refUrl
      * @return NULL|string
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function constructUrl(Request $appRequest, Url $refUrl)
     {

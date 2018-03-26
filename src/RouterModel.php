@@ -96,6 +96,8 @@ class RouterModel
      * @param $locale
      * @param $alias
      * @return mixed
+     * @throws Exception
+     * @throws \Throwable
      */
     public function getParametersByAlias($locale, $alias)
     {
@@ -128,6 +130,8 @@ class RouterModel
      * @param $presenter
      * @param $parameters
      * @return mixed
+     * @throws Exception
+     * @throws \Throwable
      */
     public function getAliasByParameters($presenter, $parameters)
     {
@@ -196,6 +200,8 @@ class RouterModel
      * @param $action
      * @return mixed
      * @throws Dibi\Exception
+     * @throws Exception
+     * @throws \Throwable
      */
     private function getIdRouter($presenter, $action)
     {
@@ -237,6 +243,8 @@ class RouterModel
      * @param $alias
      * @return mixed
      * @throws Dibi\Exception
+     * @throws Exception
+     * @throws \Throwable
      */
     private function getIdRouterAlias($idRouter, $idLocale, $idItem, $alias)
     {
@@ -308,6 +316,8 @@ class RouterModel
      * @param           $alias
      * @return mixed|null
      * @throws Dibi\Exception
+     * @throws Exception
+     * @throws \Throwable
      */
     public function insertAlias(Presenter $presenter, $alias)
     {
@@ -330,6 +340,8 @@ class RouterModel
      * @param array $parameters
      * @return mixed|null
      * @throws Dibi\Exception
+     * @throws Exception
+     * @throws \Throwable
      */
     public function createRouter($presenter, $action, $alias, $parameters = [])
     {
@@ -346,6 +358,8 @@ class RouterModel
      * @param array $parameters
      * @return mixed|null
      * @throws Dibi\Exception
+     * @throws Exception
+     * @throws \Throwable
      */
     public function deleteRouter($presenter = null, $action = null, $alias = null, $parameters = [])
     {
