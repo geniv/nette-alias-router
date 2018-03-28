@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost:3306
--- Vytvořeno: Sob 27. led 2018, 20:24
+-- Vytvořeno: Stř 28. bře 2018, 16:18
 -- Verze serveru: 10.1.26-MariaDB-0+deb9u1
 -- Verze PHP: 7.0.27-0+deb9u1
 
@@ -44,7 +44,7 @@ CREATE TABLE `prefix_router_alias` (
 --
 ALTER TABLE `prefix_router_alias`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `locale_alias_UNIQUE` (`id_locale`,`alias`),
+  ADD UNIQUE KEY `locale_router_alias_UNIQUE` (`id_locale`,`id_router`,`alias`),
   ADD KEY `fk_router_alias_route_idx` (`id_router`),
   ADD KEY `fk_router_alias_locale_idx` (`id_locale`);
 
