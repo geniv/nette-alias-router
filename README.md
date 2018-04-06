@@ -28,11 +28,12 @@ aliasRouter:
 #   debugger: true
 #   autowired: self
     tablePrefix: %tablePrefix%
-#    domainSwitch: true
-#    domainAlias:
-#        example.cz: cs
-#        example.com: en
-#        example.de: de
+#   enabled: true
+#   domainSwitch: true
+#   domainAlias:
+#       example.cz: cs
+#       example.com: en
+#       example.de: de
 ```
 
 neon configure extension:

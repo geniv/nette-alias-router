@@ -39,6 +39,8 @@ class RouterModel
     private $cache;
     /** @var array domain locale switch */
     private $domain = [];
+    /** @var bool */
+    private $enabled = true;
 
 
     /**
@@ -69,9 +71,22 @@ class RouterModel
         $this->tableRouter = $parameters['tablePrefix'] . self::TABLE;
         $this->tableRouterAlias = $parameters['tablePrefix'] . self::TABLE_ALIAS;
 
+        $this->enabled = boolval($parameters['enabled']);
+
         $this->connection = $connection;
         $this->locale = $locale;
         $this->cache = new Cache($storage, 'cache-AliasRouter-RouterModel');
+    }
+
+
+    /**
+     * Is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 
 

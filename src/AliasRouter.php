@@ -101,6 +101,17 @@ class AliasRouter implements IRouter
 
 
     /**
+     * Is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->routerModel->isEnabled();
+    }
+
+
+    /**
      * Maps HTTP request to a Request object.
      *
      * @param IRequest $httpRequest

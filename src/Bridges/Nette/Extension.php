@@ -22,6 +22,7 @@ class Extension extends CompilerExtension
         'debugger'     => true,
         'autowired'    => 'self',
         'tablePrefix'  => null,
+        'enabled'      => true,
         'domainSwitch' => false,
         'domainAlias'  => [],
     ];
