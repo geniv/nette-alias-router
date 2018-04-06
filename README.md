@@ -46,11 +46,13 @@ RouterFactory.php:
 ```php
 public static function createRouter(ILocale $locale, AliasRouter $aliasRouter): IRouter
 ...
-$router[] = $aliasRouter;
-$aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
-$aliasRouter->setPaginatorVariable('visualPaginator-page');
-//$aliasRouter->setSecure(true);
-//$aliasRouter->setOneWay(true);
+if ($aliasRouter->isEnabled()) {
+    $router[] = $aliasRouter;
+    $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
+    $aliasRouter->setPaginatorVariable('visualPaginator-page');
+    //$aliasRouter->setSecure(true);
+    //$aliasRouter->setOneWay(true);
+}
 ```
 
 usage @layout.latte:
