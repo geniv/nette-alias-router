@@ -37,7 +37,7 @@ class Extension extends CompilerExtension
         $config = $this->validateConfig($this->defaults);
 
         // define router
-        $builder->addDefinition($this->prefix('default'))
+        $default = $builder->addDefinition($this->prefix('default'))
             ->setFactory(AliasRouter::class)
             ->setAutowired($config['autowired']);
 
@@ -47,15 +47,20 @@ class Extension extends CompilerExtension
             ->setAutowired($config['autowired']);
 
         // define filter
-        $builder->addDefinition($this->prefix('filter.slug'))
+        $slug = $builder->addDefinition($this->prefix('filter.slug'))
             ->setFactory(FilterSlug::class)
             ->setAutowired($config['autowired']);
 
+        // linked filter to latte
+        $builder->getDefinition('latte.latteFactory')
+            ->addSetup('addFilter', ['addSlug', $slug]);
+
         // define panel
         if (isset($config['debugger']) && $config['debugger']) {
-            $builder->addDefinition($this->prefix('panel'))
+            $panel = $builder->addDefinition($this->prefix('panel'))
                 ->setFactory(Panel::class)
                 ->setAutowired($config['autowired']);
+            $default->addSetup([$panel, 'register']);
         }
     }
 
@@ -68,17 +73,10 @@ class Extension extends CompilerExtension
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults);
 
-        // linked filter to latte
-        $builder->getDefinition('latte.latteFactory')
-            ->addSetup('addFilter', ['addSlug', $this->prefix('@filter.slug')]);
-
         if (isset($config['debugger']) && $config['debugger']) {
-            // linked panel to tracy
-            $builder->getDefinition($this->prefix('model'))
-                ->addSetup('?->register(?)', [$this->prefix('@panel'), '@self']);
-
+            $onRequest = 'application.application';
             // linked to application request
-            $builder->getDefinition('application.application')
+            $builder->getDefinition($onRequest)
                 ->addSetup('$service->onRequest[] = ?', [[$this->prefix('@panel'), 'onRequest']]);
         }
     }
