@@ -8,7 +8,6 @@ use Locale\ILocale;
 use Nette\Application\Application;
 use Nette\Application\Request;
 use Nette\SmartObject;
-use Tracy\Debugger;
 use Tracy\IBarPanel;
 
 
@@ -32,23 +31,13 @@ class Panel implements IBarPanel
     /**
      * Panel constructor.
      *
-     * @param ILocale $locale
-     */
-    public function __construct(ILocale $locale)
-    {
-        $this->idLocale = $locale->getId();
-    }
-
-
-    /**
-     * Register to Tracy.
-     *
      * @param RouterModel $routerModel
+     * @param ILocale     $locale
      */
-    public function register(RouterModel $routerModel)
+    public function __construct(RouterModel $routerModel, ILocale $locale)
     {
         $this->routerModel = $routerModel;
-        Debugger::getBar()->addPanel($this);
+        $this->idLocale = $locale->getId();
     }
 
 
@@ -92,7 +81,6 @@ class Panel implements IBarPanel
             'routes'      => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->idLocale) : []),
             'urlId'       => $presenter->getParameter('id'),
         ];
-
         $latte = new Engine;
         return $latte->renderToString(__DIR__ . '/PanelTemplate.latte', $params);
     }
