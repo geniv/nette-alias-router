@@ -37,7 +37,7 @@ class Extension extends CompilerExtension
         $config = $this->validateConfig($this->defaults);
 
         // define router
-        $default = $builder->addDefinition($this->prefix('default'))
+        $builder->addDefinition($this->prefix('default'))
             ->setFactory(AliasRouter::class)
             ->setAutowired($config['autowired']);
 
@@ -58,9 +58,11 @@ class Extension extends CompilerExtension
         // define panel
         if (isset($config['debugger']) && $config['debugger']) {
             $panel = $builder->addDefinition($this->prefix('panel'))
-                ->setFactory(Panel::class)
-                ->setAutowired($config['autowired']);
-            $default->addSetup([$panel, 'register']);
+                ->setFactory(Panel::class);
+
+            // linked panel to tracy
+            $builder->getDefinition('tracy.bar')
+                ->addSetup('addPanel', [$panel]);
         }
     }
 
