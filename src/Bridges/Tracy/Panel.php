@@ -77,7 +77,6 @@ class Panel implements IBarPanel
         $presenter = $this->application->getPresenter();
 
         $params = [
-            'class'  => get_class($this->routerModel),
             'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->idLocale) : []),
             'urlId'  => $presenter->getParameter('id'),
         ];

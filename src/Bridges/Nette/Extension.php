@@ -56,7 +56,7 @@ class Extension extends CompilerExtension
             ->addSetup('addFilter', ['addSlug', $slug]);
 
         // define panel
-        if (isset($config['debugger']) && $config['debugger']) {
+        if ($config['debugger']) {
             $panel = $builder->addDefinition($this->prefix('panel'))
                 ->setFactory(Panel::class);
 
@@ -75,7 +75,7 @@ class Extension extends CompilerExtension
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults);
 
-        if (isset($config['debugger']) && $config['debugger']) {
+        if ($config['debugger']) {
             $onRequest = 'application.application';
             // linked to application request
             $builder->getDefinition($onRequest)
