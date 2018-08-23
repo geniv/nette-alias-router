@@ -75,7 +75,7 @@ class RouterModel
 
         $this->connection = $connection;
         $this->locale = $locale;
-        $this->cache = new Cache($storage, 'cache-AliasRouter-RouterModel');
+        $this->cache = new Cache($storage, 'AliasRouter-RouterModel');
     }
 
 
