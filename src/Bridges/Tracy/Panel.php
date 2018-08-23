@@ -24,8 +24,8 @@ class Panel implements IBarPanel
     private $routerModel;
     /** @var Application */
     private $application;
-    /** @var int */
-    private $idLocale;
+    /** @var ILocale */
+    private $locale;
 
 
     /**
@@ -37,7 +37,7 @@ class Panel implements IBarPanel
     public function __construct(RouterModel $routerModel, ILocale $locale)
     {
         $this->routerModel = $routerModel;
-        $this->idLocale = $locale->getId();
+        $this->locale = $locale;
     }
 
 
@@ -77,7 +77,7 @@ class Panel implements IBarPanel
         $presenter = $this->application->getPresenter();
 
         $params = [
-            'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->idLocale) : []),
+            'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
             'urlId'  => $presenter->getParameter('id'),
         ];
         $latte = new Engine;
