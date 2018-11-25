@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AliasRouter;
 
-use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
@@ -15,7 +14,7 @@ use Nette\SmartObject;
  * @author  geniv
  * @package AliasRouter
  */
-class AliasRouter implements IRouter
+class AliasRouter implements IAliasRouter
 {
     use SmartObject;
 
@@ -45,58 +44,50 @@ class AliasRouter implements IRouter
     /**
      * Enable https, default is disable.
      *
-     * @param $secure
-     * @return $this
+     * @param bool $secure
      */
-    public function setSecure($secure)
+    public function setSecure(bool $secure)
     {
         $this->secure = $secure;
-        return $this;
     }
 
 
     /**
      * Enable one way router.
      *
-     * @param $oneWay
-     * @return $this
+     * @param bool $oneWay
      */
-    public function setOneWay($oneWay)
+    public function setOneWay(bool $oneWay)
     {
         $this->oneWay = $oneWay;
-        return $this;
     }
 
 
     /**
      * Set default parameters, presenter, action and locale.
      *
-     * @param $presenter
-     * @param $action
-     * @param $locale
-     * @return $this
+     * @param string $presenter
+     * @param string $action
+     * @param string $locale
      */
-    public function setDefaultParameters($presenter, $action, $locale)
+    public function setDefaultParameters(string $presenter, string $action, string $locale)
     {
         $this->defaultParameters = [
             'presenter' => $presenter,
             'action'    => $action,
             'locale'    => $locale,
         ];
-        return $this;
     }
 
 
     /**
      * Set paginator variable.
      *
-     * @param $variable
-     * @return $this
+     * @param string $variable
      */
-    public function setPaginatorVariable($variable)
+    public function setPaginatorVariable(string $variable)
     {
         $this->paginatorVariable = $variable;
-        return $this;
     }
 
 
