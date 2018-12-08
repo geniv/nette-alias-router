@@ -2,6 +2,7 @@
 
 namespace AliasRouter;
 
+use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
@@ -14,7 +15,7 @@ use Nette\SmartObject;
  * @author  geniv
  * @package AliasRouter
  */
-class AliasRouter implements IAliasRouter
+class AliasRouter implements IAliasRouter, IRouter
 {
     use SmartObject;
 

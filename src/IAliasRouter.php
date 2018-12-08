@@ -2,8 +2,6 @@
 
 namespace AliasRouter;
 
-use Nette\Application\IRouter;
-
 
 /**
  * Interface IAliasRouter
@@ -11,7 +9,7 @@ use Nette\Application\IRouter;
  * @author  geniv
  * @package AliasRouter
  */
-interface IAliasRouter extends IRouter
+interface IAliasRouter
 {
 
     /**
