@@ -3,12 +3,11 @@
 namespace AliasRouter\Drivers;
 
 use AliasRouter\AliasRouter;
-use dibi;
-use Dibi\Connection;
-use Dibi\IDataSource;
 use Locale\ILocale;
+use Nette\Application\Request;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Nette\Http\Url;
 
 
 /**
@@ -20,6 +19,12 @@ use Nette\Caching\IStorage;
 class ArrayDriver extends AliasRouter
 {
 
+    public function __construct()
+    {
+        //
+    }
+
+    //TODO bude podobne jako: vendor/geniv/nette-locale/src/Drivers/ArrayDriver.php ale bude vychazet ze static routeru!
 
 //    use SmartObject;
 //

@@ -2,7 +2,7 @@
 
 namespace AliasRouter\Bridges\Tracy;
 
-use AliasRouter\RouterModel;
+use AliasRouter\IAliasRouter;
 use Latte\Engine;
 use Locale\ILocale;
 use Nette\Application\Application;
@@ -20,8 +20,8 @@ use Tracy\IBarPanel;
 class Panel implements IBarPanel
 {
     use SmartObject;
-    /** @var RouterModel */
-    private $routerModel;
+    /** @var IAliasRouter */
+    private $aliasRouter;
     /** @var Application */
     private $application;
     /** @var ILocale */
@@ -31,12 +31,12 @@ class Panel implements IBarPanel
     /**
      * Panel constructor.
      *
-     * @param RouterModel $routerModel
-     * @param ILocale     $locale
+     * @param IAliasRouter $aliasRouter
+     * @param ILocale      $locale
      */
-    public function __construct(RouterModel $routerModel, ILocale $locale)
+    public function __construct(IAliasRouter $aliasRouter, ILocale $locale)
     {
-        $this->routerModel = $routerModel;
+        $this->aliasRouter = $aliasRouter;
         $this->locale = $locale;
     }
 
@@ -75,7 +75,7 @@ class Panel implements IBarPanel
     public function getPanel()
     {
         $presenter = $this->application->getPresenter();
-
+//FIXME vyhodit!!!!?! predelat?!!!
         $params = [
             'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
             'urlId'  => $presenter->getParameter('id'),

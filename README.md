@@ -21,15 +21,22 @@ require:
 
 Include in application
 ----------------------
+
+available source drivers:
+- ArrayDriver ()
+- NeonDriver ()
+- DibiDriver (dibi + cache `_AliasRouter-DibiDriver`)
+
 neon configure:
 ```neon
 # alias router
 aliasRouter:
 #   debugger: true
-#   autowired: self
-    tablePrefix: %tablePrefix%
+#   autowired: true
+#    driver: AliasRouter\Drivers\ArrayDriver()
+#    driver: AliasRouter\Drivers\NeonDriver()
+    driver: AliasRouter\Drivers\DibiDriver(%tablePrefix%)
 #   enabled: true
-#   domainSwitch: true
 #   domainAlias:
 #       example.cz: cs
 #       example.com: en
@@ -42,16 +49,18 @@ extensions:
     aliasRouter: AliasRouter\Bridges\Nette\Extension
 ```
 
+Available interface: `IAliasRouter`
+
 RouterFactory.php:
 ```php
 public static function createRouter(ILocale $locale, IAliasRouter $aliasRouter): IRouter
 ...
 if ($aliasRouter->isEnabled()) {
-    $router[] = $aliasRouter;
     $aliasRouter->setDefaultParameters('Homepage', 'default', 'cs');
     $aliasRouter->setPaginatorVariable('visualPaginator-page');
     //$aliasRouter->setSecure(true);
     //$aliasRouter->setOneWay(true);
+    $router[] = $aliasRouter->getRouter();
 }
 ```
 

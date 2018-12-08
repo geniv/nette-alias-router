@@ -17,6 +17,7 @@ use Nette\Utils\Strings;
 /**
  * Class RouterModel
  *
+ * @deprecated
  * @author  geniv
  * @package AliasRouter
  */
@@ -127,7 +128,7 @@ class RouterModel
                     'a.alias'     => $alias,
                 ])
                 ->fetch();
-
+//TODO nacitani pole podle aliasu a lokalizace:  locale-alias: [id, presenter, action, id_item] - nacteni vsech kvuli historii
             $this->cache->save($cacheKey, $result, [
                 Cache::EXPIRE => '30 minutes',
                 Cache::TAGS   => ['router-cache'],
@@ -161,7 +162,7 @@ class RouterModel
                     'a.id_locale' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
                 ])
                 ->orderBy('a.added')->desc();
-
+//TODO nacitani podle presenteru, locale, akce a id_item, razeno: nejnovejsi nahore locale-presenter-akce-id_item: [id, alias, id_item] nacitani jen tech co je potreba
             // add action condition
             if (isset($parameters['action'])) {
                 $result->where(['r.action' => $parameters['action']]);

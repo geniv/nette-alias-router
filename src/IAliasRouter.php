@@ -2,6 +2,8 @@
 
 namespace AliasRouter;
 
+use Nette\Application\IRouter;
+
 
 /**
  * Interface IAliasRouter
@@ -11,6 +13,14 @@ namespace AliasRouter;
  */
 interface IAliasRouter
 {
+
+    /**
+     * Get router.
+     *
+     * @return IRouter
+     */
+    public function getRouter(): IRouter;
+
 
     /**
      * Enable https, default is disable.
@@ -51,5 +61,5 @@ interface IAliasRouter
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 }
