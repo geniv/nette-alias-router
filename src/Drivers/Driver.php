@@ -2,8 +2,11 @@
 
 namespace AliasRouter\Drivers;
 
+use AliasRouter\InternalRouterPresenter;
 use Locale\ILocale;
+use Nette\Application\UI\Presenter;
 use Nette\SmartObject;
+use Nette\Utils\Strings;
 
 
 /**
@@ -49,4 +52,53 @@ abstract class Driver implements IDriver
      * @return mixed
      */
     abstract protected function loadInternalData();
+
+
+    /**
+     * Insert alias.
+     *
+     * @param Presenter $presenter
+     * @param string    $alias
+     * @return int
+     */
+    public function insertAlias(Presenter $presenter, string $alias): int
+    {
+        $result = null;
+        $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
+        if ($safeAlias) {
+            $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
+            $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
+        }
+        return $result;
+    }
+
+
+    /**
+     * Create router.
+     *
+     * @param string $presenter
+     * @param string $action
+     * @param string $alias
+     * @param array  $parameters
+     * @return int
+     */
+    public function createRouter(string $presenter, string $action, string $alias, array $parameters = []): int
+    {
+        return $this->insertAlias(new InternalRouterPresenter($presenter, $action, $parameters), $alias);
+    }
+
+
+    /**
+     * Delete router.
+     *
+     * @param string|null $presenter
+     * @param string|null $action
+     * @param string|null $alias
+     * @param array       $parameters
+     * @return int
+     */
+    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
+    {
+        // TODO: Implement deleteRouter() method.
+    }
 }
