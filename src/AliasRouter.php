@@ -58,6 +58,8 @@ class AliasRouter implements IAliasRouter
      */
     public function getRouter(): IRouter
     {
+        $this->driver->loadInternalData();
+
         //TODO domyslet!!! dodelat!!!
         return new Router($this->driver);
     }

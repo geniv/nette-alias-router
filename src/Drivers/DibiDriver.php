@@ -486,7 +486,33 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        // TODO: Implement loadInternalData() method.
+        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
+            ->from($this->tableRouter)->as('r')
+            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+            ->fetchAll();
+        dump($result);
+
+
+        $result = $this->connection->select('r.id, a.alias, a.id_item')
+            ->from($this->tableRouter)->as('r')
+            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+//                ->where([
+//                    'r.presenter' => $presenter,
+//                    'a.id_locale' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
+//                ])
+            ->orderBy('a.added')->desc()
+            ->fetchAll();
+        dump($result);
+
+
+//        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
+//                ->from($this->tableRouter)->as('r')
+//                ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+//                ->where([
+//                    'a.id_locale' => $this->locale->getIdByCode($locale),
+//                    'a.alias'     => $alias,
+//                ])
+//                ->fetch();
     }
 
 
