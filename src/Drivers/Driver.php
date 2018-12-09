@@ -66,6 +66,10 @@ abstract class Driver implements IDriver
         $result = null;
         $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
+
+            //TODO vkladani do DB
+//            dump($this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
+
             $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
             $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
         }

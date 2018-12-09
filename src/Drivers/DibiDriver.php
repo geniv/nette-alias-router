@@ -47,6 +47,8 @@ class DibiDriver extends Driver
 
         $this->connection = $connection;
         $this->cache = new Cache($storage, 'AliasRouter-DibiDriver');
+
+        $this->loadInternalData();
     }
 
 
@@ -476,6 +478,8 @@ class DibiDriver extends Driver
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
         // TODO: Implement saveInternalData() method.
+
+        //TODO vkladani dat do databaze!!!!
     }
 
 
