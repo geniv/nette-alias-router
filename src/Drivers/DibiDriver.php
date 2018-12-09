@@ -25,7 +25,6 @@ class DibiDriver extends Driver
     private $tableRouter, $tableRouterAlias;
     /** @var Connection */
     private $connection;
-
     /** @var Cache */
     private $cache;
 
@@ -40,6 +39,8 @@ class DibiDriver extends Driver
      */
     public function __construct(string $prefix, Connection $connection, ILocale $locale, IStorage $storage)
     {
+        parent::__construct($locale);
+
         // define table names
         $this->tableRouter = $prefix . self::TABLE;
         $this->tableRouterAlias = $prefix . self::TABLE_ALIAS;
@@ -47,11 +48,6 @@ class DibiDriver extends Driver
         $this->connection = $connection;
         $this->cache = new Cache($storage, 'AliasRouter-DibiDriver');
     }
-
-    //TODO interface metody na nacitani rout, uzpusobit pro predavani na tridu: Router
-
-    //TODO a co treba druhy interface ktery bude urcovat datove toky pro match a construct!!!
-    //TODO a ten hlavni interface bude ten ktery je pro uzivatele a odstini datove prenosy mezi routerem <-.> driverem
 
 //    use SmartObject;
 //

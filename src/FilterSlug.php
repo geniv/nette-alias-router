@@ -2,6 +2,7 @@
 
 namespace AliasRouter;
 
+use AliasRouter\Drivers\IDriver;
 use Latte\Runtime\FilterInfo;
 use Nette\Application\Application;
 use Nette\SmartObject;
@@ -17,8 +18,8 @@ class FilterSlug
 {
     use SmartObject;
 
-    /** @var RouterModel */
-    private $routerModel;
+    /** @var IDriver */
+    private $driver;
     /** @var Application */
     private $application;
 
@@ -26,12 +27,12 @@ class FilterSlug
     /**
      * FilterSlug constructor.
      *
-     * @param RouterModel $routerModel
+     * @param IDriver     $driver
      * @param Application $application
      */
-    public function __construct(RouterModel $routerModel, Application $application)
+    public function __construct(IDriver $driver, Application $application)
     {
-        $this->routerModel = $routerModel;
+        $this->driver = $driver;
         $this->application = $application;
     }
 
@@ -41,13 +42,12 @@ class FilterSlug
      *
      * @param FilterInfo $info
      * @param            $string
-     * @throws \Dibi\Exception
      * @throws \Exception
      * @throws \Throwable
      */
     public function __invoke(FilterInfo $info, $string)
     {
         $presenter = $this->application->getPresenter();
-        $this->routerModel->insertAlias($presenter, $string);
+        $this->driver->insertAlias($presenter, $string);
     }
 }

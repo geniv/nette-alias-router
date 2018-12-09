@@ -13,9 +13,6 @@ use Locale\ILocale;
  */
 class ArrayDriver extends Driver
 {
-    /** @var ILocale */
-    private $locale;
-
 
     /**
      * ArrayDriver constructor.
@@ -24,7 +21,7 @@ class ArrayDriver extends Driver
      */
     public function __construct(ILocale $locale)
     {
-        $this->locale = $locale;
+        parent::__construct($locale);
     }
 
     //TODO bude podobne jako: vendor/geniv/nette-locale/src/Drivers/ArrayDriver.php ale bude vychazet ze static routeru!

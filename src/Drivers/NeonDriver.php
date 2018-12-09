@@ -15,8 +15,6 @@ class NeonDriver extends Driver
 {
     /** @var string */
     private $path;
-    /** @var ILocale */
-    private $locale;
 
 
     /**
@@ -27,8 +25,9 @@ class NeonDriver extends Driver
      */
     public function __construct(string $path, ILocale $locale)
     {
+        parent::__construct($locale);
+
         $this->path = $path;
-        $this->locale = $locale;
     }
 
 //TODO sepsat, bude podobne systemu jako: vendor/geniv/nette-translator/src/Drivers/NeonDriver.php

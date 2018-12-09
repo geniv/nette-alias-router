@@ -2,7 +2,7 @@
 
 namespace AliasRouter\Bridges\Tracy;
 
-use AliasRouter\IAliasRouter;
+use AliasRouter\Drivers\IDriver;
 use Latte\Engine;
 use Locale\ILocale;
 use Nette\Application\Application;
@@ -20,8 +20,8 @@ use Tracy\IBarPanel;
 class Panel implements IBarPanel
 {
     use SmartObject;
-    /** @var IAliasRouter */
-    private $aliasRouter;
+    /** @var IDriver */
+    private $driver;
     /** @var Application */
     private $application;
     /** @var ILocale */
@@ -31,12 +31,12 @@ class Panel implements IBarPanel
     /**
      * Panel constructor.
      *
-     * @param IAliasRouter $aliasRouter
-     * @param ILocale      $locale
+     * @param IDriver $driver
+     * @param ILocale $locale
      */
-    public function __construct(IAliasRouter $aliasRouter, ILocale $locale)
+    public function __construct(IDriver $driver, ILocale $locale)
     {
-        $this->aliasRouter = $aliasRouter;
+        $this->driver = $driver;
         $this->locale = $locale;
     }
 
@@ -75,10 +75,11 @@ class Panel implements IBarPanel
     public function getPanel()
     {
         $presenter = $this->application->getPresenter();
-//FIXME vyhodit!!!!?! predelat?!!!
+//FIXME predelat?!!!
         $params = [
-            'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
-            'urlId'  => $presenter->getParameter('id'),
+//            'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
+'routes' => [],
+'urlId'  => $presenter->getParameter('id'),
         ];
         $latte = new Engine;
         return $latte->renderToString(__DIR__ . '/PanelTemplate.latte', $params);
