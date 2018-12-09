@@ -12,20 +12,20 @@ namespace AliasRouter\Drivers;
 interface IDriver
 {
 
-    public function getParametersByAlias(string $locale, string $alias);
+    public function getParametersByAlias(string $locale, string $alias): array;
 
 
-    public function getAliasByParameters(string $presenter, array $parameters);
+    public function getAliasByParameters(string $presenter, array $parameters): array;
 
 
 //    public function cleanCache();
 
 
-    public function insertAlias($presenter, $string);
+    public function insertAlias(string $presenter, string $string): int;
 
 
-    public function createRouter($presenter, $action, $alias, $parameters = []);
+    public function createRouter(string $presenter, string $action, string $alias, array $parameters = []): int;
 
 
-    public function deleteRouter($presenter = null, $action = null, $alias = null, $parameters = []);
+    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int;
 }
