@@ -4,6 +4,7 @@ namespace AliasRouter\Drivers;
 
 use Dibi\Connection;
 use Locale\ILocale;
+use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 
@@ -468,4 +469,99 @@ class DibiDriver extends Driver
 //        }
 //        return $result;
 //    }
+
+
+    /**
+     * Save internalData.
+     *
+     * @param string $presenter
+     * @param string $action
+     * @param string $alias
+     * @param array  $parameters
+     * @return int
+     */
+    protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
+    {
+        // TODO: Implement saveInternalData() method.
+    }
+
+
+    /**
+     * Load internal data.
+     *
+     * @return mixed
+     */
+    protected function loadInternalData()
+    {
+        // TODO: Implement loadInternalData() method.
+    }
+
+
+    /**
+     * Get parameters by alias.
+     *
+     * @param string $locale
+     * @param string $alias
+     * @return array
+     */
+    public function getParametersByAlias(string $locale, string $alias): array
+    {
+        // TODO: Implement getParametersByAlias() method.
+    }
+
+
+    /**
+     * Get alias by parameters.
+     *
+     * @param string $presenter
+     * @param array  $parameters
+     * @return array
+     */
+    public function getAliasByParameters(string $presenter, array $parameters): array
+    {
+        // TODO: Implement getAliasByParameters() method.
+    }
+
+
+    /**
+     * Insert alias.
+     *
+     * @param Presenter $presenter
+     * @param string    $alias
+     * @return int
+     */
+    public function insertAlias(Presenter $presenter, string $alias): int
+    {
+        // TODO: Implement insertAlias() method.
+    }
+
+
+    /**
+     * Create router.
+     *
+     * @param string $presenter
+     * @param string $action
+     * @param string $alias
+     * @param array  $parameters
+     * @return int
+     */
+    public function createRouter(string $presenter, string $action, string $alias, array $parameters = []): int
+    {
+        // TODO: Implement createRouter() method.
+    }
+
+
+    /**
+     * Delete router.
+     *
+     * @param string|null $presenter
+     * @param string|null $action
+     * @param string|null $alias
+     * @param array       $parameters
+     * @return int
+     */
+    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
+    {
+        // TODO: Implement deleteRouter() method.
+    }
 }
