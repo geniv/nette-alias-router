@@ -4,10 +4,6 @@ namespace AliasRouter\Drivers;
 
 use AliasRouter\AliasRouter;
 use Locale\ILocale;
-use Nette\Application\Request;
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use Nette\Http\Url;
 
 
 /**
@@ -18,10 +14,18 @@ use Nette\Http\Url;
  */
 class ArrayDriver extends AliasRouter
 {
+    /** @var ILocale */
+    private $locale;
 
-    public function __construct()
+
+    /**
+     * ArrayDriver constructor.
+     *
+     * @param ILocale $locale
+     */
+    public function __construct(ILocale $locale)
     {
-        //
+        $this->locale = $locale;
     }
 
     //TODO bude podobne jako: vendor/geniv/nette-locale/src/Drivers/ArrayDriver.php ale bude vychazet ze static routeru!

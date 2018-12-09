@@ -3,9 +3,7 @@
 namespace AliasRouter\Drivers;
 
 use AliasRouter\AliasRouter;
-use dibi;
 use Dibi\Connection;
-use Dibi\IDataSource;
 use Locale\ILocale;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
@@ -34,6 +32,14 @@ class DibiDriver extends AliasRouter
     private $cache;
 
 
+    /**
+     * DibiDriver constructor.
+     *
+     * @param string     $prefix
+     * @param Connection $connection
+     * @param ILocale    $locale
+     * @param IStorage   $storage
+     */
     public function __construct(string $prefix, Connection $connection, ILocale $locale, IStorage $storage)
     {
         // define table names
@@ -45,6 +51,7 @@ class DibiDriver extends AliasRouter
         $this->cache = new Cache($storage, 'AliasRouter-DibiDriver');
     }
 
+    //TODO interface metody na nacitani rout, uzpusobit pro predavani na tridu: Router
 
 //    use SmartObject;
 //

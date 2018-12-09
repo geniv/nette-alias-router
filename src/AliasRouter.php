@@ -32,10 +32,10 @@ abstract class AliasRouter implements IAliasRouter
     private $paginatorVariable = 'vp';
 
 
-    public function __construct()
-    {
-        //TODO nastaveni spolecnych veci v konfiguraci!!!
-    }
+//    public function __construct()
+//    {
+//        //TODO nastaveni spolecnych veci v konfiguraci!!!
+//    }
 
 
     /**

@@ -3,12 +3,7 @@
 namespace AliasRouter\Drivers;
 
 use AliasRouter\AliasRouter;
-use dibi;
-use Dibi\Connection;
-use Dibi\IDataSource;
 use Locale\ILocale;
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
 
 
 /**
@@ -19,7 +14,23 @@ use Nette\Caching\IStorage;
  */
 class NeonDriver extends AliasRouter
 {
-    public function __construct(string $path){}
+    /** @var string */
+    private $path;
+    /** @var ILocale */
+    private $locale;
+
+
+    /**
+     * NeonDriver constructor.
+     *
+     * @param string  $path
+     * @param ILocale $locale
+     */
+    public function __construct(string $path, ILocale $locale)
+    {
+        $this->path = $path;
+        $this->locale = $locale;
+    }
 
 //TODO sepsat, bude podobne systemu jako: vendor/geniv/nette-translator/src/Drivers/NeonDriver.php
 

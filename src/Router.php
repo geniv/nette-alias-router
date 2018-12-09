@@ -17,7 +17,11 @@ use Nette\Http\Url;
 class Router implements IRouter
 {
 
-//TODO implementovat!!!!
+    /**
+     * Router constructor.
+     *
+     * @param IAliasRouter $aliasRouter
+     */
     public function __construct(IAliasRouter $aliasRouter)
     {
 //        dump($aliasRouter);
