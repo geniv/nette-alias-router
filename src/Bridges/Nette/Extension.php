@@ -2,6 +2,7 @@
 
 namespace AliasRouter\Bridges\Nette;
 
+use AliasRouter\AliasRouter;
 use AliasRouter\Bridges\Tracy\Panel;
 use AliasRouter\FilterSlug;
 use Nette\DI\CompilerExtension;
@@ -33,8 +34,13 @@ class Extension extends CompilerExtension
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults);
 
+        // define default
+        $builder->addDefinition($this->prefix('default'))
+            ->setFactory(AliasRouter::class, [$config['enabled'], $config['domainAlias']])
+            ->setAutowired($config['autowired']);
+
         // define driver
-        $default = $builder->addDefinition($this->prefix('default'))
+        $driver = $builder->addDefinition($this->prefix('driver'))
             ->setFactory($config['driver'])
             ->addSetup('setConfigure', [$config['enabled'], $config['domainAlias']])
             ->setAutowired($config['autowired']);
@@ -51,7 +57,7 @@ class Extension extends CompilerExtension
         // define panel
         if ($config['debugger']) {
             $panel = $builder->addDefinition($this->prefix('panel'))
-                ->setFactory(Panel::class, [$default]);
+                ->setFactory(Panel::class, [$driver]);
 
             // linked panel to tracy
             $builder->getDefinition('tracy.bar')

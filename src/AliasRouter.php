@@ -32,23 +32,18 @@ class AliasRouter implements IAliasRouter
     private $paginatorVariable = 'vp';
 
 
-//    public function __construct()
-//    {
-//        //TODO nastaveni spolecnych veci v konfiguraci!!!
-//    }
-//TODO pijde sem vkladani instance driveru IDriver ne?
-
     /**
-     * Set configure.
+     * AliasRouter constructor.
      *
      * @param bool  $enabled
      * @param array $domainAlias
      */
-    public function setConfigure(bool $enabled = true, array $domainAlias = [])
+    public function __construct(bool $enabled = true, array $domainAlias = [])
     {
         $this->domainAlias = $domainAlias;
         $this->enabled = $enabled;
     }
+//TODO prijde sem vkladani instance driveru IDriver ne?
 
 
     /**
