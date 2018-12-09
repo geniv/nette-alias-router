@@ -29,4 +29,6 @@ abstract class Driver implements IDriver
     {
         $this->locale = $locale;
     }
+
+    //TODO abstraktni metodu alespon jednu!
 }

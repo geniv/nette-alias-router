@@ -12,7 +12,7 @@ use Nette\SmartObject;
  * @author  geniv
  * @package AliasRouter
  */
-abstract class AliasRouter implements IAliasRouter
+class AliasRouter implements IAliasRouter
 {
     use SmartObject;
 
