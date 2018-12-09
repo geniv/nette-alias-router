@@ -30,5 +30,12 @@ abstract class Driver implements IDriver
         $this->locale = $locale;
     }
 
+
     //TODO abstraktni metodu alespon jednu!
+
+
+    abstract protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int;
+
+
+    abstract protected function loadInternalData();
 }
