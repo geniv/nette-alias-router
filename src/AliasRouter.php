@@ -2,6 +2,7 @@
 
 namespace AliasRouter;
 
+use AliasRouter\Drivers\IDriver;
 use Nette\Application\IRouter;
 use Nette\SmartObject;
 
@@ -20,6 +21,8 @@ class AliasRouter implements IAliasRouter
     private $domainAlias = [];
     /** @var bool */
     private $enabled = true;
+    /** @var IDriver */
+    private $driver;
 
     /** @var bool */
     private $secure = false;
@@ -35,13 +38,15 @@ class AliasRouter implements IAliasRouter
     /**
      * AliasRouter constructor.
      *
-     * @param bool  $enabled
-     * @param array $domainAlias
+     * @param bool    $enabled
+     * @param array   $domainAlias
+     * @param IDriver $driver
      */
-    public function __construct(bool $enabled = true, array $domainAlias = [])
+    public function __construct(bool $enabled = true, array $domainAlias = [], IDriver $driver)
     {
         $this->domainAlias = $domainAlias;
         $this->enabled = $enabled;
+        $this->driver = $driver;
     }
 //TODO prijde sem vkladani instance driveru IDriver ne?
 
@@ -54,7 +59,7 @@ class AliasRouter implements IAliasRouter
     public function getRouter(): IRouter
     {
         //TODO domyslet!!! dodelat!!!
-        return new Router($this);
+        return new Router($this->driver);
     }
 
 

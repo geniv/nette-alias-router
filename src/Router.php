@@ -2,6 +2,7 @@
 
 namespace AliasRouter;
 
+use AliasRouter\Drivers\IDriver;
 use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
@@ -20,12 +21,12 @@ class Router implements IRouter
     /**
      * Router constructor.
      *
-     * @param IAliasRouter $aliasRouter
+     * @param IDriver $driver
      */
-    public function __construct(IAliasRouter $aliasRouter)
+    public function __construct(IDriver $driver)
     {
         //FIXME sem pride IDriver!!!
-//        dump($aliasRouter);
+//        dump($driver);
     }
 
 
