@@ -2,7 +2,6 @@
 
 namespace AliasRouter\Drivers;
 
-use AliasRouter\AliasRouter;
 use Locale\ILocale;
 
 
@@ -12,7 +11,7 @@ use Locale\ILocale;
  * @author  geniv
  * @package AliasRouter\Drivers
  */
-class ArrayDriver extends AliasRouter
+class ArrayDriver extends Driver
 {
     /** @var ILocale */
     private $locale;

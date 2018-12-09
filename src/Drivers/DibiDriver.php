@@ -2,7 +2,6 @@
 
 namespace AliasRouter\Drivers;
 
-use AliasRouter\AliasRouter;
 use Dibi\Connection;
 use Locale\ILocale;
 use Nette\Caching\Cache;
@@ -15,7 +14,7 @@ use Nette\Caching\IStorage;
  * @author  geniv
  * @package AliasRouter\Drivers
  */
-class DibiDriver extends AliasRouter
+class DibiDriver extends Driver
 {
     // define constant table names
     const
@@ -26,8 +25,7 @@ class DibiDriver extends AliasRouter
     private $tableRouter, $tableRouterAlias;
     /** @var Connection */
     private $connection;
-    /** @var ILocale */
-    private $locale;
+
     /** @var Cache */
     private $cache;
 
@@ -47,11 +45,13 @@ class DibiDriver extends AliasRouter
         $this->tableRouterAlias = $prefix . self::TABLE_ALIAS;
 
         $this->connection = $connection;
-        $this->locale = $locale;
         $this->cache = new Cache($storage, 'AliasRouter-DibiDriver');
     }
 
     //TODO interface metody na nacitani rout, uzpusobit pro predavani na tridu: Router
+
+    //TODO a co treba druhy interface ktery bude urcovat datove toky pro match a construct!!!
+    //TODO a ten hlavni interface bude ten ktery je pro uzivatele a odstini datove prenosy mezi routerem <-.> driverem
 
 //    use SmartObject;
 //

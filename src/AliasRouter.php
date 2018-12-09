@@ -36,7 +36,7 @@ abstract class AliasRouter implements IAliasRouter
 //    {
 //        //TODO nastaveni spolecnych veci v konfiguraci!!!
 //    }
-
+//TODO pijde sem vkladani instance driveru IDriver ne?
 
     /**
      * Set configure.

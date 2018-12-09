@@ -2,7 +2,6 @@
 
 namespace AliasRouter\Drivers;
 
-use AliasRouter\AliasRouter;
 use Locale\ILocale;
 
 
@@ -12,7 +11,7 @@ use Locale\ILocale;
  * @author  geniv
  * @package AliasRouter\Drivers
  */
-class NeonDriver extends AliasRouter
+class NeonDriver extends Driver
 {
     /** @var string */
     private $path;
