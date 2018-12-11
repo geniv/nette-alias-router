@@ -63,15 +63,21 @@ abstract class Driver implements IDriver
      */
     public function insertAlias(Presenter $presenter, string $alias): int
     {
-        $result = null;
+        $result = 0;
         $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
 
             //TODO vkladani do DB
 //            dump($this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
 
-            $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
-            $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
+            $parameters = [
+                'id_locale' => $this->locale->getIdByCode($presenter->getParameter('locale')),
+                'id_item'   => $presenter->getParameter('id'),
+            ];
+            $result = $this->saveInternalData($presenter->getName(), $presenter->action, $safeAlias, $parameters);
+
+//            $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
+//            $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
         }
         return $result;
     }

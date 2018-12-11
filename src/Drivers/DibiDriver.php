@@ -2,6 +2,7 @@
 
 namespace AliasRouter\Drivers;
 
+use dibi;
 use Dibi\Connection;
 use Locale\ILocale;
 use Nette\Caching\Cache;
@@ -467,6 +468,18 @@ class DibiDriver extends Driver
 
 
     /**
+     * Clean cache.
+     */
+    public function cleanCache()
+    {
+        // internal clean cache
+        $this->cache->clean([
+            Cache::TAGS => ['loadData'],
+        ]);
+    }
+
+
+    /**
      * Save internalData.
      *
      * @param string $presenter
@@ -477,9 +490,63 @@ class DibiDriver extends Driver
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
-        // TODO: Implement saveInternalData() method.
-
         //TODO vkladani dat do databaze!!!!
+
+        $idLocale = $parameters['id_locale'];
+        $idItem = $parameters['id_item'] ?? null;
+
+        $idRouter = $this->connection->select('id')
+            ->from($this->tableRouter)
+            ->where([
+                'presenter' => $presenter,
+                'action'    => $action,
+            ])
+            ->fetchSingle();
+
+        if (!$idRouter) {
+            $idRouter = $this->connection->insert($this->tableRouter, [
+                'presenter' => $presenter,
+                'action'    => $action,
+            ])->execute(Dibi::IDENTIFIER);
+        }
+
+        $cursor = $this->connection->select('id')
+            ->from($this->tableRouterAlias)
+            ->where([
+                'id_router' => $idRouter,
+                'id_locale' => $idLocale,
+                'alias'     => $alias,
+            ]);
+        if ($idItem) {
+            $cursor->where(['id_item' => $idItem]);
+        }
+        $id = $cursor->fetchSingle();
+
+
+        if (!$id) {
+//            try {
+            $id = $this->connection->insert($this->tableRouterAlias, [
+                'id_locale' => $idLocale,
+                'id_router' => $idRouter,
+                'id_item'   => $idItem,
+                'alias'     => $alias,
+                'added%sql' => 'NOW()',
+            ])->execute(Dibi::IDENTIFIER);
+//            } catch (UniqueConstraintViolationException $e) {
+//                // recursive resolve duplicate alias
+//                $al = explode('--', $alias);    // explode alias
+//                if (count($al) > 1) {
+//                    $alias = implode(array_slice($al, 0, -1)) . '--' . ($al[count($al) - 1] + 1);   // implode alias
+//                } else {
+//                    $alias .= '--' . 1; // first repair name
+//                }
+//                $id = $this->getIdRouterAlias($idRouter, $idLocale, $idItem, $alias);   // but db autoincrement is still increment :(
+//            }
+        }
+
+        dump($idRouter, $id);
+
+//        $this->cleanCache();
     }
 
 
