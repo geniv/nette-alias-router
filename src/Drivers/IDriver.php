@@ -34,9 +34,6 @@ interface IDriver
     public function getAliasByParameters(string $presenter, array $parameters): array;
 
 
-//TODO pridat: public function cleanCache();
-
-
     /**
      * Insert alias.
      *
@@ -69,4 +66,10 @@ interface IDriver
      * @return int
      */
     public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int;
+
+
+    /**
+     * Clean cache.
+     */
+    public function cleanCache();
 }
