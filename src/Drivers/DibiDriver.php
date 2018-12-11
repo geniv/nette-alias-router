@@ -547,6 +547,8 @@ class DibiDriver extends Driver
         dump($idRouter, $id);
 
 //        $this->cleanCache();
+
+        return 0;
     }
 
 
