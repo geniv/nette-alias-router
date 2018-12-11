@@ -4,6 +4,7 @@ namespace AliasRouter\Drivers;
 
 use dibi;
 use Dibi\Connection;
+use Dibi\UniqueConstraintViolationException;
 use Locale\ILocale;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
@@ -480,13 +481,14 @@ class DibiDriver extends Driver
 
 
     /**
-     * Save internalData.
+     * Save internal data.
      *
      * @param string $presenter
      * @param string $action
      * @param string $alias
      * @param array  $parameters
      * @return int
+     * @throws \Dibi\Exception
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
@@ -522,17 +524,17 @@ class DibiDriver extends Driver
         }
         $id = $cursor->fetchSingle();
 
-
         if (!$id) {
-//            try {
-            $id = $this->connection->insert($this->tableRouterAlias, [
-                'id_locale' => $idLocale,
-                'id_router' => $idRouter,
-                'id_item'   => $idItem,
-                'alias'     => $alias,
-                'added%sql' => 'NOW()',
-            ])->execute(Dibi::IDENTIFIER);
-//            } catch (UniqueConstraintViolationException $e) {
+            try {
+                $id = $this->connection->insert($this->tableRouterAlias, [
+                    'id_locale' => $idLocale,
+                    'id_router' => $idRouter,
+                    'id_item'   => $idItem,
+                    'alias'     => $alias,
+                    'added%sql' => 'NOW()',
+                ])->execute(Dibi::IDENTIFIER);
+            } catch (UniqueConstraintViolationException $e) {
+                dump($e);
 //                // recursive resolve duplicate alias
 //                $al = explode('--', $alias);    // explode alias
 //                if (count($al) > 1) {
@@ -541,7 +543,7 @@ class DibiDriver extends Driver
 //                    $alias .= '--' . 1; // first repair name
 //                }
 //                $id = $this->getIdRouterAlias($idRouter, $idLocale, $idItem, $alias);   // but db autoincrement is still increment :(
-//            }
+            }
         }
 
         dump($idRouter, $id);
@@ -564,7 +566,7 @@ class DibiDriver extends Driver
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->fetchAll();
         dump($result);
-
+////TODO nacitani pole podle aliasu a lokalizace:  locale-alias: [id, presenter, action, id_item] - nacteni vsech kvuli historii
 
         $result = $this->connection->select('r.id, a.alias, a.id_item')
             ->from($this->tableRouter)->as('r')
@@ -576,7 +578,7 @@ class DibiDriver extends Driver
             ->orderBy('a.added')->desc()
             ->fetchAll();
         dump($result);
-
+////TODO nacitani podle presenteru, locale, akce a id_item, razeno: nejnovejsi nahore locale-presenter-akce-id_item: [id, alias, id_item] nacitani jen tech co je potreba
 
 //        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
 //                ->from($this->tableRouter)->as('r')
