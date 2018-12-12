@@ -29,6 +29,8 @@ class DibiDriver extends Driver
     private $connection;
     /** @var Cache */
     private $cache;
+    /** @var array */
+    private $match, $constructUrl;
 
 
     /**
@@ -492,8 +494,6 @@ class DibiDriver extends Driver
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
-        //TODO vkladani dat do databaze!!!!
-
         $idLocale = $parameters['id_locale'];
         $idItem = $parameters['id_item'] ?? null;
 
@@ -563,19 +563,18 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, CONCAT(a.id_locale, "-", a.alias) uid')
+        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, CONCAT(a.id_locale, "-", a.alias) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->fetchAssoc('uid');
-        dump($match);
 
-        $constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
+        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->orderBy(['r.id', 'a.id_locale'])->asc()
             ->orderBy('a.added')->desc()
             ->fetchAssoc('uid');
-        dump($constructUrl);
+
 
 //        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
 //            ->from($this->tableRouter)->as('r')
@@ -630,6 +629,8 @@ class DibiDriver extends Driver
     public function getParametersByAlias(string $locale, string $alias): array
     {
         // TODO: Implement getParametersByAlias() method.
+
+        dump($this->match);
     }
 
 
@@ -643,5 +644,7 @@ class DibiDriver extends Driver
     public function getAliasByParameters(string $presenter, array $parameters): array
     {
         // TODO: Implement getAliasByParameters() method.
+
+        dump($this->constructUrl);
     }
 }
