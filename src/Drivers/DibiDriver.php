@@ -569,7 +569,7 @@ class DibiDriver extends Driver
             ->fetchAssoc('uid');
         dump($match);
 
-        $constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-"), "#", a.id) uid')
+        $constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->orderBy(['r.id', 'a.id_locale'])->asc()
