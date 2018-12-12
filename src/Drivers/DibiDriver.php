@@ -494,7 +494,7 @@ class DibiDriver extends Driver
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
-        $idLocale = $parameters['id_locale'];
+        $idLocale = $parameters['id_locale'] ?? $this->locale->getIdDefault();
         $idItem = $parameters['id_item'] ?? null;
 
         $idRouter = $this->connection->select('id')
@@ -503,7 +503,7 @@ class DibiDriver extends Driver
                 'presenter' => $presenter,
                 'action'    => $action,
             ])
-            ->fetchSingle();
+            ->fetchSingle();    //FIXME cachovat?!
 
         if (!$idRouter) {
             $idRouter = $this->connection->insert($this->tableRouter, [
@@ -522,7 +522,7 @@ class DibiDriver extends Driver
         if ($idItem) {
             $cursor->where(['id_item' => $idItem]);
         }
-        $id = $cursor->fetchSingle();
+        $id = $cursor->fetchSingle();   //FIXME cachovat!!
 
         if (!$id) {
             try {
@@ -566,14 +566,14 @@ class DibiDriver extends Driver
         $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, CONCAT(a.id_locale, "-", a.alias) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-            ->fetchAssoc('uid');
+            ->fetchAssoc('uid');    //FIXME cachovat!!
 
         $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->orderBy(['r.id', 'a.id_locale'])->asc()
             ->orderBy('a.added')->desc()
-            ->fetchAssoc('uid');
+            ->fetchAssoc('uid');    //FIXME cachovat!!
 
 
 //        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
@@ -632,7 +632,7 @@ class DibiDriver extends Driver
 
         $index = $idLocale . '-' . $alias;
 
-        return (array) $this->match[$index] ?? [];
+        return (array) ($this->match[$index] ?? []);
     }
 
 
@@ -646,11 +646,11 @@ class DibiDriver extends Driver
     public function getAliasByParameters(string $presenter, array $parameters): array
     {
         $action = $parameters['action'];
-        $idLocale = $parameters['id_locale'];
+        $idLocale = $parameters['id_locale'] ?? $this->locale->getIdDefault();
         $idItem = $parameters['id_item'] ?? null;
 
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 
-        return (array) $this->constructUrl[$index] ?? [];
+        return (array) ($this->constructUrl[$index] ?? []);
     }
 }
