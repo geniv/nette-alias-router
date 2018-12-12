@@ -17,6 +17,8 @@ use Nette\Http\Url;
  */
 class Router implements IRouter
 {
+    private $driver;
+
 
     /**
      * Router constructor.
@@ -27,6 +29,7 @@ class Router implements IRouter
     {
         //FIXME sem pride IDriver!!!
 //        dump($driver);
+        $this->driver = $driver;
     }
 
 
@@ -38,6 +41,9 @@ class Router implements IRouter
     function match(IRequest $httpRequest)
     {
         // TODO: Implement match() method.
+
+        $parameters = $this->driver->getParametersByAlias('cs', 'kontakt');
+        dump($parameters);
     }
 
 
@@ -49,6 +55,9 @@ class Router implements IRouter
     function constructUrl(Request $appRequest, Url $refUrl)
     {
         // TODO: Implement constructUrl() method.
+
+        $parameters = $this->driver->getAliasByParameters('Contact', ['id_locale' => 1, 'action' => 'default']);
+        dump($parameters);
     }
 
 

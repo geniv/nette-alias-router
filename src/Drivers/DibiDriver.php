@@ -628,9 +628,11 @@ class DibiDriver extends Driver
      */
     public function getParametersByAlias(string $locale, string $alias): array
     {
-        // TODO: Implement getParametersByAlias() method.
+        $idLocale = $this->locale->getIdByCode($locale);
 
-        dump($this->match);
+        $index = $idLocale . '-' . $alias;
+
+        return $this->match[$index] ?? [];
     }
 
 
@@ -643,8 +645,12 @@ class DibiDriver extends Driver
      */
     public function getAliasByParameters(string $presenter, array $parameters): array
     {
-        // TODO: Implement getAliasByParameters() method.
+        $action = $parameters['action'];
+        $idLocale = $parameters['id_locale'];
+        $idItem = $parameters['id_item'] ?? null;
 
-        dump($this->constructUrl);
+        $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
+
+        return $this->constructUrl[$index] ?? [];
     }
 }
