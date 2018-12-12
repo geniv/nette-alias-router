@@ -563,41 +563,50 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $locales = $this->locale->getLocales();
-        $match = [];
-        foreach ($locales as $locale) {
-            $match[$locale['id']] = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
-                ->from($this->tableRouter)->as('r')
-                ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-                ->where([
-                    'a.id_locale' => $locale['id'],
-                ])
-                ->fetchAssoc('alias');
-        }
-dump($match);
-
-        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
+        $match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, CONCAT(a.id_locale, "-", a.alias) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-//            ->where([
-//                    'a.id_locale' => $this->locale->getIdByCode($locale),
-//                    'a.alias'     => $alias,
-//                ])
-            ->fetchAll();
-        dump($result);
+            ->fetchAssoc('uid');
+        dump($match);
+
+        $constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-"), "#", a.id) uid')
+            ->from($this->tableRouter)->as('r')
+            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+            ->orderBy(['r.id', 'a.id_locale'])->asc()
+            ->orderBy('a.added')->desc()
+            ->fetchAssoc('uid');
+        dump($constructUrl);
+
+//        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
+//            ->from($this->tableRouter)->as('r')
+//            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+////            ->where([
+////                    'a.id_locale' => $this->locale->getIdByCode($locale),
+////                    'a.alias'     => $alias,
+////                ])
+//            ->fetchAll();
+//        dump($result);
 //        [locale][alias]=>[presenter, akce, id_item]
 ////TODO nacitani pole podle aliasu a lokalizace:  locale-alias: [id, presenter, action, id_item] - nacteni vsech kvuli historii
 
-        $result = $this->connection->select('r.id, a.alias, a.id_item, a.id_locale')
-            ->from($this->tableRouter)->as('r')
-            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-//                ->where([
-//                    'r.presenter' => $presenter,
-//                    'a.id_locale' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
-//                ])
-            ->orderBy('a.added')->desc()
-            ->fetchAll();
-        dump($result);
+//        $result = $this->connection->select('r.id, a.alias, a.id_item, a.id_locale')
+//            ->from($this->tableRouter)->as('r')
+//            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+////                ->where([
+////                    'r.presenter' => $presenter,
+////                    'a.id_locale' => $this->locale->getIdByCode(isset($parameters['locale']) ? $parameters['locale'] : ''),
+////                ])
+//            ->orderBy('a.added')->desc()
+//            ->fetchAll();
+////        if (isset($parameters['action'])) {
+////            $result->where(['r.action' => $parameters['action']]);
+////        }
+////
+////        // add id condition
+////        if (isset($parameters['id'])) {
+////            $result->where(['a.id_item' => $parameters['id']]);
+////        }
+//        dump($result);
 ////TODO nacitani podle presenteru, locale, akce a id_item, razeno: nejnovejsi nahore locale-presenter-akce-id_item: [id, alias, id_item] nacitani jen tech co je potreba
 
 //        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
