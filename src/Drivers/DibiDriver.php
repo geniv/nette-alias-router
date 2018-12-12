@@ -632,7 +632,7 @@ class DibiDriver extends Driver
 
         $index = $idLocale . '-' . $alias;
 
-        return $this->match[$index] ?? [];
+        return (array) $this->match[$index] ?? [];
     }
 
 
@@ -651,6 +651,6 @@ class DibiDriver extends Driver
 
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 
-        return $this->constructUrl[$index] ?? [];
+        return (array) $this->constructUrl[$index] ?? [];
     }
 }

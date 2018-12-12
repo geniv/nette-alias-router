@@ -2,6 +2,7 @@
 
 namespace AliasRouter;
 
+use AliasRouter\Drivers\IDriver;
 use Nette\Application\IRouter;
 
 
@@ -15,11 +16,35 @@ interface IAliasRouter
 {
 
     /**
+     * Get driver.
+     *
+     * @return IDriver
+     */
+    public function getDriver(): IDriver;
+
+
+    /**
      * Get router.
      *
      * @return IRouter
      */
     public function getRouter(): IRouter;
+
+
+    /**
+     * Get domain alias.
+     *
+     * @return array
+     */
+    public function getDomainAlias(): array;
+
+
+    /**
+     * Is secure.
+     *
+     * @return bool
+     */
+    public function isSecure(): bool;
 
 
     /**
@@ -31,11 +56,27 @@ interface IAliasRouter
 
 
     /**
+     * Is one way.
+     *
+     * @return bool
+     */
+    public function isOneWay(): bool;
+
+
+    /**
      * Enable one way router.
      *
      * @param bool $oneWay
      */
     public function setOneWay(bool $oneWay);
+
+
+    /**
+     * Get default parameters.
+     *
+     * @return array
+     */
+    public function getDefaultParameters(): array;
 
 
     /**
@@ -46,6 +87,14 @@ interface IAliasRouter
      * @param string $locale
      */
     public function setDefaultParameters(string $presenter, string $action, string $locale);
+
+
+    /**
+     * Get paginator variable.
+     *
+     * @return string
+     */
+    public function getPaginatorVariable(): string;
 
 
     /**

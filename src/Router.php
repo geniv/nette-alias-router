@@ -17,33 +17,104 @@ use Nette\Http\Url;
  */
 class Router implements IRouter
 {
+    /** @var IDriver */
     private $driver;
+    /** @var array */
+    private $domainAlias, $defaultParameters, $paginatorVariable;
 
 
     /**
      * Router constructor.
      *
-     * @param IDriver $driver
+     * @param IAliasRouter $aliasRouter
      */
-    public function __construct(IDriver $driver)
+    public function __construct(IAliasRouter $aliasRouter)
     {
-        //FIXME sem pride IDriver!!!
-//        dump($driver);
-        $this->driver = $driver;
+        $this->driver = $aliasRouter->getDriver();
+
+        $this->domainAlias = $aliasRouter->getDomainAlias();
+        $this->defaultParameters = $aliasRouter->getDefaultParameters();
+        $this->paginatorVariable = $aliasRouter->getPaginatorVariable();
     }
 
 
     /**
      * Maps HTTP request to a Request object.
      *
+     * @param IRequest $httpRequest
      * @return Request|null
      */
     function match(IRequest $httpRequest)
     {
-        // TODO: Implement match() method.
+        $pathInfo = $httpRequest->getUrl()->getPathInfo();
 
-        $parameters = $this->driver->getParametersByAlias('cs', 'kontakt');
-        dump($parameters);
+        // parse locale
+        $locale = $this->defaultParameters['locale'];
+        if (preg_match('/((?<locale>[a-z]{2})\/)?/', $pathInfo, $m) && isset($m['locale'])) {
+            $locale = trim($m['locale'], '/_');
+            $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // ocesani slugu
+        }
+
+        // vyber jazyka podle domeny
+        if ($this->domainAlias) {
+            $host = $httpRequest->url->host;    // nacteni url hostu pro zvoleni jazyka
+            if (isset($this->domainAlias[$host])) {
+                $locale = $this->domainAlias[$host];
+            }
+        }
+
+        // parse alias
+        $alias = null;
+        if (preg_match('/((?<alias>[a-z0-9-\/]+)(\/)?)?/', $pathInfo, $m) && isset($m['alias'])) {
+            $alias = trim($m['alias'], '/_');
+            $pathInfo = trim(substr($pathInfo, strlen($m['alias'])), '/_');   // ocesani jazyka od slugu
+        }
+
+        // parse paginator
+        $parameters = [];
+        if (preg_match('/((?<vp>[a-z0-9-]+)(\/)?)?/', $pathInfo, $m) && isset($m['vp'])) {
+            $parameters[$this->paginatorVariable] = trim($m['vp'], '/_');
+        }
+
+        // set default presenter
+        $presenter = $this->defaultParameters['presenter'];
+
+        // set locale to parameters
+        $parameters['locale'] = $locale;
+
+        // akceptace adresy kde je na konci zbytecne lomitko, odebere posledni lomitko
+        if ($alias) {
+            $alias = rtrim($alias, '/_');
+        }
+
+        if ($alias) {
+            // load parameters
+            $param = $this->driver->getParametersByAlias($locale, $alias);
+            if ($param) {
+                $presenter = $param['presenter'];
+                $parameters['action'] = $param['action'];
+                if ($param['id_item']) {
+                    $parameters['id'] = $param['id_item'];
+                }
+            } else {
+                return null;
+            }
+        }
+
+        $parameters += $httpRequest->getQuery();
+
+        if (!$presenter) {
+            return null;
+        }
+
+        return new Request(
+            $presenter,
+            $httpRequest->getMethod(),
+            $parameters,
+            $httpRequest->getPost(),
+            $httpRequest->getFiles(),
+            [Request::SECURED => $httpRequest->isSecured()]
+        );
     }
 
 
@@ -61,90 +132,6 @@ class Router implements IRouter
     }
 
 
-
-//    /**
-//     * Maps HTTP request to a Request object.
-//     *
-//     * @param IRequest $httpRequest
-//     * @return Request|NULL
-//     * @throws \Exception
-//     * @throws \Throwable
-//     */
-//    public function match(IRequest $httpRequest)
-//    {
-//        $pathInfo = $httpRequest->getUrl()->getPathInfo();
-//
-//        // parse locale
-//        $locale = $this->defaultParameters['locale'];
-//        if (preg_match('/((?<locale>[a-z]{2})\/)?/', $pathInfo, $m) && isset($m['locale'])) {
-//            $locale = trim($m['locale'], '/_');
-//            $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // ocesani slugu
-//        }
-//
-//        // vyber jazyka podle domeny
-//        $domain = $this->routerModel->getDomain();
-//        if ($domain && $domain['switch']) {
-//            $host = $httpRequest->url->host;    // nacteni url hostu pro zvoleni jazyka
-//            if (isset($domain['alias'][$host])) {
-//                $locale = $domain['alias'][$host];
-//            }
-//        }
-//
-//        // parse alias
-//        $alias = null;
-//        if (preg_match('/((?<alias>[a-z0-9-\/]+)(\/)?)?/', $pathInfo, $m) && isset($m['alias'])) {
-//            $alias = trim($m['alias'], '/_');
-//            $pathInfo = trim(substr($pathInfo, strlen($m['alias'])), '/_');   // ocesani jazyka od slugu
-//        }
-//
-//        // parse paginator
-//        $parameters = [];
-//        if (preg_match('/((?<vp>[a-z0-9-]+)(\/)?)?/', $pathInfo, $m) && isset($m['vp'])) {
-//            $parameters[$this->paginatorVariable] = trim($m['vp'], '/_');
-//        }
-//
-//        // set default presenter
-//        $presenter = $this->defaultParameters['presenter'];
-//
-//        // set locale to parameters
-//        $parameters['locale'] = $locale;
-//
-//        // akceptace adresy kde je na konci zbytecne lomitko, odebere posledni lomitko
-//        if ($alias) {
-//            $alias = rtrim($alias, '/_');
-//        }
-//
-//        if ($alias) {
-//            // load parameters from database
-//            $param = $this->routerModel->getParametersByAlias($locale, $alias);
-//            if ($param) {
-//                $presenter = $param->presenter;
-//                $parameters['action'] = $param->action;
-//                if ($param->id_item) {
-//                    $parameters['id'] = $param->id_item;
-//                }
-//            } else {
-//                return null;
-//            }
-//        }
-//
-//        $parameters += $httpRequest->getQuery();
-//
-//        if (!$presenter) {
-//            return null;
-//        }
-//
-//        return new Request(
-//            $presenter,
-//            $httpRequest->getMethod(),
-//            $parameters,
-//            $httpRequest->getPost(),
-//            $httpRequest->getFiles(),
-//            [Request::SECURED => $httpRequest->isSecured()]
-//        );
-//    }
-//
-//
 //    /**
 //     * Constructs absolute URL from Request object.
 //     *
