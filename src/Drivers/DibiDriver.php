@@ -534,7 +534,7 @@ class DibiDriver extends Driver
                     'added%sql' => 'NOW()',
                 ])->execute(Dibi::IDENTIFIER);
             } catch (UniqueConstraintViolationException $e) {
-                dump($e);
+                dump($e);   //TODO doresit stejne linky
 //                // recursive resolve duplicate alias
 //                $al = explode('--', $alias);    // explode alias
 //                if (count($al) > 1) {
@@ -553,6 +553,8 @@ class DibiDriver extends Driver
         return 0;
     }
 
+//FIXME Problem je pri manualni uprave z DB routeru, efektivne by to ale nemelo byt mozne a meli by to resit jen samotne zdroje!
+
 
     /**
      * Load internal data.
@@ -561,14 +563,32 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item')
+        $locales = $this->locale->getLocales();
+        $match = [];
+        foreach ($locales as $locale) {
+            $match[$locale['id']] = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
+                ->from($this->tableRouter)->as('r')
+                ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+                ->where([
+                    'a.id_locale' => $locale['id'],
+                ])
+                ->fetchAssoc('alias');
+        }
+dump($match);
+
+        $result = $this->connection->select('r.id, r.presenter, r.action, a.id_item, a.id_locale, a.alias')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+//            ->where([
+//                    'a.id_locale' => $this->locale->getIdByCode($locale),
+//                    'a.alias'     => $alias,
+//                ])
             ->fetchAll();
         dump($result);
+//        [locale][alias]=>[presenter, akce, id_item]
 ////TODO nacitani pole podle aliasu a lokalizace:  locale-alias: [id, presenter, action, id_item] - nacteni vsech kvuli historii
 
-        $result = $this->connection->select('r.id, a.alias, a.id_item')
+        $result = $this->connection->select('r.id, a.alias, a.id_item, a.id_locale')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
 //                ->where([
