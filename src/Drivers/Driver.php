@@ -111,4 +111,26 @@ abstract class Driver implements IDriver
     {
         // TODO: Implement deleteRouter() method.
     }
+
+
+    /**
+     * Get code locale.
+     *
+     * @param array $parameters
+     * @param array $domainAlias
+     * @return string
+     */
+    public function getCodeLocale(array $parameters, array $domainAlias): string
+    {
+        // null locale => empty locale in url
+        if (!isset($parameters['locale'])) {
+            return '';
+        }
+//TODO anglicky!
+        // nuluje lokalizaci pri hlavnim jazyku a domain switch
+        if (isset($parameters['locale']) && $parameters['locale'] == $this->locale->getCodeDefault() || $domainAlias) {
+            return '';
+        }
+        return $parameters['locale'];
+    }
 }

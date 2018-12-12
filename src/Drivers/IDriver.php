@@ -72,4 +72,14 @@ interface IDriver
      * Clean cache.
      */
     public function cleanCache();
+
+
+    /**
+     * Get code locale.
+     *
+     * @param array $parameters
+     * @param array $domainAlias
+     * @return string
+     */
+    public function getCodeLocale(array $parameters, array $domainAlias): string;
 }

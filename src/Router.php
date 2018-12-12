@@ -21,6 +21,8 @@ class Router implements IRouter
     private $driver;
     /** @var array */
     private $domainAlias, $defaultParameters, $paginatorVariable;
+    /** @var bool */
+    private $oneWay, $secure;
 
 
     /**
@@ -35,6 +37,8 @@ class Router implements IRouter
         $this->domainAlias = $aliasRouter->getDomainAlias();
         $this->defaultParameters = $aliasRouter->getDefaultParameters();
         $this->paginatorVariable = $aliasRouter->getPaginatorVariable();
+        $this->oneWay = $aliasRouter->isOneWay();
+        $this->secure = $aliasRouter->isSecure();
     }
 
 
@@ -44,7 +48,7 @@ class Router implements IRouter
      * @param IRequest $httpRequest
      * @return Request|null
      */
-    function match(IRequest $httpRequest)
+    public function match(IRequest $httpRequest)
     {
         $pathInfo = $httpRequest->getUrl()->getPathInfo();
 
@@ -121,58 +125,40 @@ class Router implements IRouter
     /**
      * Constructs absolute URL from Request object.
      *
+     * @param Request $appRequest
+     * @param Url     $refUrl
      * @return string|null
      */
-    function constructUrl(Request $appRequest, Url $refUrl)
+    public function constructUrl(Request $appRequest, Url $refUrl)
     {
-        // TODO: Implement constructUrl() method.
+        // in one way mode or ignore ajax request
+        if ($this->oneWay || isset($appRequest->parameters['do'])) {
+            return null;
+        }
 
-        $parameters = $this->driver->getAliasByParameters('Contact', ['id_locale' => 1, 'action' => 'default']);
-        dump($parameters);
+        $param = $this->driver->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
+        if ($param) {
+            $parameters = $appRequest->parameters;
+
+            $part = implode('/', array_filter([$this->driver->getCodeLocale($parameters, $this->domainAlias), $param['alias']]));
+            $alias = trim(isset($parameters[$this->paginatorVariable]) ? implode('_', [$part, $parameters[$this->paginatorVariable]]) : $part, '/_');
+
+            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->paginatorVariable]);
+
+            // create url address
+            $url = new Url($refUrl->getBaseUrl() . $alias);
+            $url->setScheme($this->secure ? 'https' : 'http');
+            $url->setQuery($parameters);
+            return $url->getAbsoluteUrl();
+        } else {
+            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
+            // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
+            if ($this->domainAlias && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
+                $url = new Url($refUrl->getBaseUrl());  // vytvari zakladni cestu bez parametru
+                $url->setScheme($this->secure ? 'https' : 'http');
+                return $url->getAbsoluteUrl();
+            }
+        }
+        return null;
     }
-
-
-//    /**
-//     * Constructs absolute URL from Request object.
-//     *
-//     * @param Request $appRequest
-//     * @param Url     $refUrl
-//     * @return NULL|string
-//     * @throws \Exception
-//     * @throws \Throwable
-//     */
-//    public function constructUrl(Request $appRequest, Url $refUrl)
-//    {
-//        // in one way mode or ignore ajax request
-//        if ($this->oneWay || isset($appRequest->parameters['do'])) {
-//            return null;
-//        }
-//
-//        $param = $this->routerModel->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
-//        if ($param) {
-//            $parameters = $appRequest->parameters;
-//
-//            $part = implode('/', array_filter([$this->routerModel->getCodeLocale($parameters), $param->alias]));
-//            $alias = trim(isset($parameters[$this->paginatorVariable]) ? implode('_', [$part, $parameters[$this->paginatorVariable]]) : $part, '/_');
-//
-//            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->paginatorVariable]);
-//
-//            // create url address
-//            $url = new Url($refUrl->getBaseUrl() . $alias);
-//            $url->setScheme($this->secure ? 'https' : 'http');
-//            $url->setQuery($parameters);
-//            return $url->getAbsoluteUrl();
-//        } else {
-//            // vyber jazyka podle domeny
-//            $domain = $this->routerModel->getDomain();
-//            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
-//            // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
-//            if ($domain && $domain['switch'] && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
-//                $url = new Url($refUrl->getBaseUrl());  // vytvari zakladni cestu bez parametru
-//                $url->setScheme($this->secure ? 'https' : 'http');
-//                return $url->getAbsoluteUrl();
-//            }
-//        }
-//        return null;
-//    }
 }
