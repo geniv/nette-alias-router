@@ -49,8 +49,6 @@ abstract class Driver implements IDriver
 
     /**
      * Load internal data.
-     *
-     * @return mixed
      */
     abstract protected function loadInternalData();
 
@@ -87,21 +85,6 @@ abstract class Driver implements IDriver
     public function createRouter(string $presenter, string $action, string $alias, array $parameters = []): int
     {
         return $this->insertAlias(new InternalRouterPresenter($presenter, $action, $parameters), $alias);
-    }
-
-
-    /**
-     * Delete router.
-     *
-     * @param string|null $presenter
-     * @param string|null $action
-     * @param string|null $alias
-     * @param array       $parameters
-     * @return int
-     */
-    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
-    {
-        // TODO: Implement deleteRouter() method.
     }
 
 

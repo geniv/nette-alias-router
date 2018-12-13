@@ -27,6 +27,8 @@ available source drivers:
 - NeonDriver ()
 - DibiDriver (dibi + cache `_AliasRouter-DibiDriver`)
 
+In router alias is not good idea change last alias, but insert new alias with new datetime stamp.
+
 neon configure:
 ```neon
 # alias router
