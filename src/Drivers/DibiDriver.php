@@ -494,7 +494,7 @@ class DibiDriver extends Driver
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
     {
-        $idLocale = $parameters['id_locale'] ?? $this->locale->getIdDefault();
+        $idLocale = $parameters['locale'] ?? $this->locale->getIdDefault();
         $idItem = $parameters['id_item'] ?? null;
 
         $idRouter = $this->connection->select('id')
@@ -646,9 +646,9 @@ class DibiDriver extends Driver
     public function getAliasByParameters(string $presenter, array $parameters): array
     {
         $action = $parameters['action'];
-        $idLocale = $parameters['id_locale'] ?? $this->locale->getIdDefault();
+        $idLocale = $this->locale->getIdByCode($parameters['locale']);
         $idItem = $parameters['id_item'] ?? null;
-
+//FIXME muci nacitat jen aktualni jazyk
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 
         return (array) ($this->constructUrl[$index] ?? []);

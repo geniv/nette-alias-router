@@ -71,8 +71,8 @@ abstract class Driver implements IDriver
 //            dump($this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
 
             $parameters = [
-                'id_locale' => $this->locale->getIdByCode($presenter->getParameter('locale')),
-                'id_item'   => $presenter->getParameter('id'),
+                'locale'  => $this->locale->getIdByCode($presenter->getParameter('locale')),
+                'id_item' => $presenter->getParameter('id'),
             ];
             $result = $this->saveInternalData($presenter->getName(), $presenter->action, $safeAlias, $parameters);
 
