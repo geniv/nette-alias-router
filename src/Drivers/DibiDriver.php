@@ -483,18 +483,18 @@ class DibiDriver extends Driver
 
 
     /**
-     * Save internal data.
+     * Save internalData.
      *
-     * @param string $presenter
-     * @param string $action
-     * @param string $alias
-     * @param array  $parameters
+     * @param string   $presenter
+     * @param string   $action
+     * @param string   $alias
+     * @param int      $idLocale
+     * @param int|null $idItem
      * @return int
      * @throws \Dibi\Exception
      */
-    protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int
+    protected function saveInternalData(string $presenter, string $action, string $alias, int $idLocale, int $idItem = null): int
     {
-        $idLocale = $parameters['locale'] ?? $this->locale->getIdDefault();
         $idItem = $parameters['id_item'] ?? null;
 
         $idRouter = $this->connection->select('id')

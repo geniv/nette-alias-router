@@ -37,13 +37,14 @@ abstract class Driver implements IDriver
     /**
      * Save internalData.
      *
-     * @param string $presenter
-     * @param string $action
-     * @param string $alias
-     * @param array  $parameters
+     * @param string   $presenter
+     * @param string   $action
+     * @param string   $alias
+     * @param int      $idLocale
+     * @param int|null $idItem
      * @return int
      */
-    abstract protected function saveInternalData(string $presenter, string $action, string $alias, array $parameters = []): int;
+    abstract protected function saveInternalData(string $presenter, string $action, string $alias, int $idLocale, int $idItem = null): int;
 
 
     /**
@@ -66,18 +67,9 @@ abstract class Driver implements IDriver
         $result = 0;
         $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
-
-            //TODO vkladani do DB
-//            dump($this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
-
-            $parameters = [
-                'locale'  => $this->locale->getIdByCode($presenter->getParameter('locale')),
-                'id_item' => $presenter->getParameter('id'),
-            ];
-            $result = $this->saveInternalData($presenter->getName(), $presenter->action, $safeAlias, $parameters);
-
-//            $idRouter = $this->getIdRouter($presenter->getName(), $presenter->action);
-//            $result = $this->getIdRouterAlias($idRouter, $this->locale->getIdByCode($presenter->getParameter('locale')), $presenter->getParameter('id'), $safeAlias);
+            $idLocale = $this->locale->getIdByCode($presenter->getParameter('locale'));
+            $idItem = $presenter->getParameter('id');
+            $result = $this->saveInternalData($presenter->getName(), $presenter->action, $safeAlias, $idLocale, $idItem);
         }
         return $result;
     }
@@ -126,8 +118,8 @@ abstract class Driver implements IDriver
         if (!isset($parameters['locale'])) {
             return '';
         }
-//TODO anglicky!
-        // nuluje lokalizaci pri hlavnim jazyku a domain switch
+
+        // nullable locale in main locale or domain switch
         if (isset($parameters['locale']) && $parameters['locale'] == $this->locale->getCodeDefault() || $domainAlias) {
             return '';
         }
