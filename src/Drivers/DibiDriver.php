@@ -242,7 +242,7 @@ class DibiDriver extends Driver
         $action = $parameters['action'];
         $idLocale = $this->locale->getIdByCode($parameters['locale']);
         $idItem = $parameters['id_item'] ?? null;
-//FIXME muci nacitat jen aktualni jazyk
+
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 
         return (array) ($this->constructUrl[$index] ?? []);

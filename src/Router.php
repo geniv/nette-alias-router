@@ -59,9 +59,9 @@ class Router implements IRouter
             $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // ocesani slugu
         }
 
-        // vyber jazyka podle domeny
+        // select locale by domain
         if ($this->domainAlias) {
-            $host = $httpRequest->url->host;    // nacteni url hostu pro zvoleni jazyka
+            $host = $httpRequest->url->host;    // get url host for select by locale
             if (isset($this->domainAlias[$host])) {
                 $locale = $this->domainAlias[$host];
             }
