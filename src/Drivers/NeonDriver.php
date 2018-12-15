@@ -197,4 +197,77 @@ class NeonDriver extends Driver
 //        // process default content
 //        $this->searchDefaultContent();
 //    }
+    /**
+     * Save internalData.
+     *
+     * @param string   $presenter
+     * @param string   $action
+     * @param string   $alias
+     * @param int      $idLocale
+     * @param int|null $idItem
+     * @return int
+     */
+    protected function saveInternalData(string $presenter, string $action, string $alias, int $idLocale, int $idItem = null): int
+    {
+        // TODO: Implement saveInternalData() method.
+    }
+
+
+    /**
+     * Load internal data.
+     */
+    protected function loadInternalData()
+    {
+        // TODO: Implement loadInternalData() method.
+    }
+
+
+    /**
+     * Get parameters by alias.
+     *
+     * @param string $locale
+     * @param string $alias
+     * @return array
+     */
+    public function getParametersByAlias(string $locale, string $alias): array
+    {
+        // TODO: Implement getParametersByAlias() method.
+    }
+
+
+    /**
+     * Get alias by parameters.
+     *
+     * @param string $presenter
+     * @param array  $parameters
+     * @return array
+     */
+    public function getAliasByParameters(string $presenter, array $parameters): array
+    {
+        // TODO: Implement getAliasByParameters() method.
+    }
+
+
+    /**
+     * Delete router.
+     *
+     * @param string|null $presenter
+     * @param string|null $action
+     * @param string|null $alias
+     * @param array       $parameters
+     * @return int
+     */
+    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
+    {
+        // TODO: Implement deleteRouter() method.
+    }
+
+
+    /**
+     * Clean cache.
+     */
+    public function cleanCache()
+    {
+        // TODO: Implement cleanCache() method.
+    }
 }

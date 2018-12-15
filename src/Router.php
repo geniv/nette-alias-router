@@ -56,7 +56,7 @@ class Router implements IRouter
         $locale = $this->defaultParameters['locale'];
         if (preg_match('/((?<locale>[a-z]{2})\/)?/', $pathInfo, $m) && isset($m['locale'])) {
             $locale = trim($m['locale'], '/_');
-            $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // ocesani slugu
+            $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // clean slug
         }
 
         // select locale by domain
@@ -71,7 +71,7 @@ class Router implements IRouter
         $alias = null;
         if (preg_match('/((?<alias>[a-z0-9-\/]+)(\/)?)?/', $pathInfo, $m) && isset($m['alias'])) {
             $alias = trim($m['alias'], '/_');
-            $pathInfo = trim(substr($pathInfo, strlen($m['alias'])), '/_');   // ocesani jazyka od slugu
+            $pathInfo = trim(substr($pathInfo, strlen($m['alias'])), '/_');   // clean locale from slug
         }
 
         // parse paginator
@@ -86,7 +86,7 @@ class Router implements IRouter
         // set locale to parameters
         $parameters['locale'] = $locale;
 
-        // akceptace adresy kde je na konci zbytecne lomitko, odebere posledni lomitko
+        // clean alias from last slug
         if ($alias) {
             $alias = rtrim($alias, '/_');
         }
@@ -151,10 +151,9 @@ class Router implements IRouter
             $url->setQuery($parameters);
             return $url->getAbsoluteUrl();
         } else {
-            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
-            // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
+            // if domain alias active then skip FORWARD method metodu or Homepage presenter - remove locale from url
             if ($this->domainAlias && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
-                $url = new Url($refUrl->getBaseUrl());  // vytvari zakladni cestu bez parametru
+                $url = new Url($refUrl->getBaseUrl());  // create base path without parameter
                 $url->setScheme($this->secure ? 'https' : 'http');
                 return $url->getAbsoluteUrl();
             }
