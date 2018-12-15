@@ -270,4 +270,26 @@ class NeonDriver extends Driver
     {
         // TODO: Implement cleanCache() method.
     }
+
+
+    /**
+     * Get match.
+     *
+     * @return array
+     */
+    public function getMatch(): array
+    {
+        // TODO: Implement getMatch() method.
+    }
+
+
+    /**
+     * Get construct url.
+     *
+     * @return array
+     */
+    public function getConstructUrl(): array
+    {
+        // TODO: Implement getConstructUrl() method.
+    }
 }

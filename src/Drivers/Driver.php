@@ -108,4 +108,12 @@ abstract class Driver implements IDriver
         }
         return $parameters['locale'];
     }
+
+
+    public function getRouterAlias(string $presenter, string $action, int $idLocale, int $idItem = null): array
+    {
+        $match = $this->getMatch();
+//        dump($match);
+        return [];//TODO filtorvani pro:  $this->match
+    }
 }

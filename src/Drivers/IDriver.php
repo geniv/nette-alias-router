@@ -35,6 +35,22 @@ interface IDriver
 
 
     /**
+     * Get match.
+     *
+     * @return array
+     */
+    public function getMatch(): array;
+
+
+    /**
+     * Get construct url.
+     *
+     * @return array
+     */
+    public function getConstructUrl(): array;
+
+
+    /**
      * Insert alias.
      *
      * @param Presenter $presenter

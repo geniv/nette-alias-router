@@ -247,4 +247,26 @@ class DibiDriver extends Driver
 
         return (array) ($this->constructUrl[$index] ?? []);
     }
+
+
+    /**
+     * Get match.
+     *
+     * @return array
+     */
+    public function getMatch(): array
+    {
+        return $this->match;
+    }
+
+
+    /**
+     * Get construct url.
+     *
+     * @return array
+     */
+    public function getConstructUrl(): array
+    {
+        return $this->constructUrl;
+    }
 }
