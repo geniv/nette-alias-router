@@ -17,11 +17,14 @@ class ArrayDriver extends Driver
     /**
      * ArrayDriver constructor.
      *
+     * @param array   $route
      * @param ILocale $locale
      */
-    public function __construct(ILocale $locale)
+    public function __construct(array $route, ILocale $locale)
     {
         parent::__construct($locale);
+
+//        dump($route);
     }
 
     //TODO bude podobne jako: vendor/geniv/nette-locale/src/Drivers/ArrayDriver.php ale bude vychazet ze static routeru!
