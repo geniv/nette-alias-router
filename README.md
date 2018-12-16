@@ -13,9 +13,9 @@ or
 
 require:
 ```json
-"php": "^7.0",
+"php": ">=7.0",
 "nette/nette": "^2.4",
-"dibi/dibi": "^4.0",
+"dibi/dibi": ">=3.0",
 "geniv/nette-locale": "^2.0"
 ```
 
