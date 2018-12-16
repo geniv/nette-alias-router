@@ -75,7 +75,7 @@ class Panel implements IBarPanel
     public function getPanel()
     {
         $presenter = $this->application->getPresenter();
-        $routes = $this->driver->getRouterAlias($presenter, $this->locale->getId(), $presenter->getParameter('id'));
+        $routes = $this->driver->getRouterAlias($presenter);
         $params = [
             'routes' => ($presenter ? $routes : []),
         ];

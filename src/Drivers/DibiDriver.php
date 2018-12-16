@@ -121,13 +121,24 @@ class DibiDriver extends Driver
      */
     private function getIdRouter(string $presenter, string $action): int
     {
-        $result = $this->connection->select('id')
-            ->from($this->tableRouter)
-            ->where([
-                'presenter' => $presenter,
-                'action'    => $action,
-            ])
-            ->fetchSingle();    //FIXME cachovat?!
+        $cacheKey = 'getIdRouter-' . $presenter . $action;
+        $result = $this->cache->load($cacheKey);
+        if ($result === null) {
+            $result = $this->connection->select('id')
+                ->from($this->tableRouter)
+                ->where([
+                    'presenter' => $presenter,
+                    'action'    => $action,
+                ])
+                ->fetchSingle();
+
+            try {
+                $this->cache->save($cacheKey, $result, [
+                    Cache::TAGS => ['loadData'],
+                ]);
+            } catch (\Throwable $e) {
+            }
+        }
 
         if (!$result) {
             $result = $this->connection->insert($this->tableRouter, [
@@ -155,17 +166,28 @@ class DibiDriver extends Driver
         $idItem = $parameters['id_item'] ?? null;
         $idRouter = $this->getIdRouter($presenter, $action);
 
-        $cursor = $this->connection->select('id')
-            ->from($this->tableRouterAlias)
-            ->where([
-                'id_router' => $idRouter,
-                'id_locale' => $idLocale,
-                'alias'     => $alias,
-            ]);
-        if ($idItem) {
-            $cursor->where(['id_item' => $idItem]);
+        $cacheKey = 'saveInternalData-' . $presenter . $action . $alias . $idLocale . $idItem;
+        $id = $this->cache->load($cacheKey);
+        if ($id === null) {
+            $cursor = $this->connection->select('id')
+                ->from($this->tableRouterAlias)
+                ->where([
+                    'id_router' => $idRouter,
+                    'id_locale' => $idLocale,
+                    'alias'     => $alias,
+                ]);
+            if ($idItem) {
+                $cursor->where(['id_item' => $idItem]);
+            }
+            $id = $cursor->fetchSingle();
+
+            try {
+                $this->cache->save($cacheKey, $id, [
+                    Cache::TAGS => ['loadData'],
+                ]);
+            } catch (\Throwable $e) {
+            }
         }
-        $id = $cursor->fetchSingle();   //FIXME cachovat!!
 
         if (!$id) {
             try {
@@ -189,7 +211,7 @@ class DibiDriver extends Driver
             }
         }
 
-//        $this->cleanCache();
+        $this->cleanCache();
 
         return $id;
     }
@@ -200,19 +222,41 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, ' .
-            'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", a.alias) uid')
-            ->from($this->tableRouter)->as('r')
-            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-            ->fetchAssoc('uid');    //FIXME cachovat!!
+        $cacheKey = 'loadInternalDataMatch';
+        $this->match = $this->cache->load($cacheKey);
+        if ($this->match === null) {
+            $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, ' .
+                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", a.alias) uid')
+                ->from($this->tableRouter)->as('r')
+                ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+                ->fetchAssoc('uid');
 
-        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, ' .
-            'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
-            ->from($this->tableRouter)->as('r')
-            ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
-            ->orderBy(['r.id', 'a.id_locale'])->asc()
-            ->orderBy('a.added')->desc()
-            ->fetchAssoc('uid');    //FIXME cachovat!!
+            try {
+                $this->cache->save($cacheKey, $this->match, [
+                    Cache::TAGS => ['loadData'],
+                ]);
+            } catch (\Throwable $e) {
+            }
+        }
+
+        $cacheKey = 'loadInternalDataConstructUrl';
+        $this->constructUrl = $this->cache->load($cacheKey);
+        if ($this->constructUrl === null) {
+            $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, ' .
+                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
+                ->from($this->tableRouter)->as('r')
+                ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
+                ->orderBy(['r.id', 'a.id_locale'])->asc()
+                ->orderBy('a.added')->desc()
+                ->fetchAssoc('uid');
+
+            try {
+                $this->cache->save($cacheKey, $this->constructUrl, [
+                    Cache::TAGS => ['loadData'],
+                ]);
+            } catch (\Throwable $e) {
+            }
+        }
     }
 
 

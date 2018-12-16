@@ -114,15 +114,15 @@ abstract class Driver implements IDriver
      * Get router alias.
      *
      * @param Presenter $presenter
-     * @param int       $idLocale
-     * @param int|null  $idItem
      * @return array
      */
-    public function getRouterAlias(Presenter $presenter, int $idLocale, int $idItem = null): array
+    public function getRouterAlias(Presenter $presenter): array
     {
         $match = $this->getMatch();
         $name = $presenter->getName();
         $action = $presenter->action;
+        $idLocale = $this->locale->getId();
+        $idItem = $presenter->getParameter('id');
 
         $result = array_filter($match, function ($row) use ($name, $action, $idLocale, $idItem) {
             return ($row['presenter'] == $name &&
