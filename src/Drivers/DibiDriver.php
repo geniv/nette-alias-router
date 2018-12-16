@@ -117,6 +117,7 @@ class DibiDriver extends Driver
      * @param string $presenter
      * @param string $action
      * @return int
+     * @throws \Dibi\Exception
      */
     private function getIdRouter(string $presenter, string $action): int
     {
@@ -127,6 +128,13 @@ class DibiDriver extends Driver
                 'action'    => $action,
             ])
             ->fetchSingle();    //FIXME cachovat?!
+
+        if (!$result) {
+            $result = $this->connection->insert($this->tableRouter, [
+                'presenter' => $presenter,
+                'action'    => $action,
+            ])->execute(Dibi::IDENTIFIER);
+        }
         return $result;
     }
 
@@ -145,14 +153,7 @@ class DibiDriver extends Driver
     protected function saveInternalData(string $presenter, string $action, string $alias, int $idLocale, int $idItem = null): int
     {
         $idItem = $parameters['id_item'] ?? null;
-
         $idRouter = $this->getIdRouter($presenter, $action);
-        if (!$idRouter) {
-            $idRouter = $this->connection->insert($this->tableRouter, [
-                'presenter' => $presenter,
-                'action'    => $action,
-            ])->execute(Dibi::IDENTIFIER);
-        }
 
         $cursor = $this->connection->select('id')
             ->from($this->tableRouterAlias)
@@ -199,12 +200,12 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, CONCAT(a.id_locale, "-", a.alias) uid')
+        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, a.id_locale, CONCAT(a.id_locale, "-", a.alias) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->fetchAssoc('uid');    //FIXME cachovat!!
 
-        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
+        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, a.id_locale, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->orderBy(['r.id', 'a.id_locale'])->asc()
