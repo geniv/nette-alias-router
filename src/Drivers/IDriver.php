@@ -76,4 +76,13 @@ interface IDriver
      * @return string
      */
     public function getCodeLocale(array $parameters, array $domainAlias): string;
+
+
+    /**
+     * Get router alias.
+     *
+     * @param Presenter $presenter
+     * @return array
+     */
+    public function getRouterAlias(Presenter $presenter): array;
 }

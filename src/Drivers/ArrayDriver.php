@@ -3,6 +3,7 @@
 namespace AliasRouter\Drivers;
 
 use Locale\ILocale;
+use Nette\Application\UI\Presenter;
 
 
 /**
@@ -13,6 +14,9 @@ use Locale\ILocale;
  */
 class ArrayDriver extends Driver
 {
+    /** @var array */
+    private $route;
+
 
     /**
      * ArrayDriver constructor.
@@ -24,7 +28,9 @@ class ArrayDriver extends Driver
     {
         parent::__construct($locale);
 
-//        dump($route);
+        $this->route = $route;
+
+        $this->loadInternalData();
     }
 
     //TODO bude podobne jako: vendor/geniv/nette-locale/src/Drivers/ArrayDriver.php ale bude vychazet ze static routeru!
@@ -224,6 +230,21 @@ class ArrayDriver extends Driver
 
 
     /**
+     * Delete router.
+     *
+     * @param string|null $presenter
+     * @param string|null $action
+     * @param string|null $alias
+     * @param array       $parameters
+     * @return int
+     */
+    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
+    {
+        // TODO: Implement deleteRouter() method.
+    }
+
+
+    /**
      * Save internalData.
      *
      * @param string   $presenter
@@ -245,20 +266,80 @@ class ArrayDriver extends Driver
     protected function loadInternalData()
     {
         // TODO: Implement loadInternalData() method.
+
+        dump($this->route);
     }
 
 
     /**
-     * Delete router.
+     * Get parameters by alias.
      *
-     * @param string|null $presenter
-     * @param string|null $action
-     * @param string|null $alias
-     * @param array       $parameters
-     * @return int
+     * @param string $locale
+     * @param string $alias
+     * @return array
      */
-    public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
+    public function getParametersByAlias(string $locale, string $alias): array
     {
-        // TODO: Implement deleteRouter() method.
+        $result = [];
+        if (isset($this->route[$locale][$alias])) {
+            list($presenter, $action, $idItem) = explode(':', $this->route[$locale][$alias]);
+            $result = [
+                'presenter' => $presenter,
+                'action'    => $action,
+                'id_item'   => $idItem,
+            ];
+        }
+        return $result;
+    }
+
+
+    /**
+     * Get alias by parameters.
+     *
+     * @param string $presenter
+     * @param array  $parameters
+     * @return array
+     */
+    public function getAliasByParameters(string $presenter, array $parameters): array
+    {
+        $action = $parameters['action'];
+        $idItem = $parameters['id'] ?? '-'; //TODO doplnit!
+
+        //aid,alias,id_item,added
+
+        $result = [];
+        $flip = array_flip($this->route[$parameters['locale']]);
+        if (isset($flip[$presenter . ':' . $action])) {
+//            return ['presenter' => $presenter, 'action' => $action, 'locale' => $locale, 'alias' => $flip[$presenter . ':' . $action]];
+            return [
+                'alias' => $flip[$presenter . ':' . $action],
+            ];
+        }
+//        $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
+
+        return $result;
+    }
+
+
+    /**
+     * Get router alias.
+     *
+     * @param Presenter $presenter
+     * @return array
+     */
+    public function getRouterAlias(Presenter $presenter): array
+    {
+        $name = $presenter->getName();
+        $action = $presenter->action;
+        $locale = $this->locale->getCode();
+        $idItem = $presenter->getParameter('id');
+//dump($this->route);
+        $result = array_filter($this->route[$locale], function ($row) use ($name, $action, $locale, $idItem) {
+            return ($row['presenter'] == $name &&
+                $row['action'] == $action &&
+//                $row['id_locale'] == $locale &&
+                $row['id_item'] == $idItem);
+        });
+        return $result;
     }
 }

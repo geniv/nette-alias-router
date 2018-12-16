@@ -21,8 +21,6 @@ abstract class Driver implements IDriver
 
     /** @var ILocale */
     protected $locale;
-    /** @var array */
-    protected $match, $constructUrl;
 
 
     /**
@@ -33,9 +31,6 @@ abstract class Driver implements IDriver
     public function __construct(ILocale $locale)
     {
         $this->locale = $locale;
-
-        $this->match = [];
-        $this->constructUrl = [];
     }
 
 
@@ -112,64 +107,5 @@ abstract class Driver implements IDriver
             return '';
         }
         return $parameters['locale'];
-    }
-
-
-    /**
-     * Get parameters by alias.
-     *
-     * @param string $locale
-     * @param string $alias
-     * @return array
-     */
-    public function getParametersByAlias(string $locale, string $alias): array
-    {
-        $idLocale = $this->locale->getIdByCode($locale);
-
-        $index = $idLocale . '-' . $alias;
-
-        return (array) ($this->match[$index] ?? []);
-    }
-
-
-    /**
-     * Get alias by parameters.
-     *
-     * @param string $presenter
-     * @param array  $parameters
-     * @return array
-     */
-    public function getAliasByParameters(string $presenter, array $parameters): array
-    {
-        $action = $parameters['action'];
-        $idLocale = $this->locale->getIdByCode($parameters['locale']);
-        $idItem = $parameters['id'] ?? '-';
-
-        $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
-
-        return (array) ($this->constructUrl[$index] ?? []);
-    }
-
-
-    /**
-     * Get router alias.
-     *
-     * @param Presenter $presenter
-     * @return array
-     */
-    public function getRouterAlias(Presenter $presenter): array
-    {
-        $name = $presenter->getName();
-        $action = $presenter->action;
-        $idLocale = $this->locale->getId();
-        $idItem = $presenter->getParameter('id');
-
-        $result = array_filter($this->match, function ($row) use ($name, $action, $idLocale, $idItem) {
-            return ($row['presenter'] == $name &&
-                $row['action'] == $action &&
-                $row['id_locale'] == $idLocale &&
-                $row['id_item'] == $idItem);
-        });
-        return $result;
     }
 }
