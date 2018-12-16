@@ -280,9 +280,9 @@ class DibiDriver extends Driver
      *
      * @param string $presenter
      * @param array  $parameters
-     * @return array
+     * @return string
      */
-    public function getAliasByParameters(string $presenter, array $parameters): array
+    public function getAliasByParameters(string $presenter, array $parameters): string
     {
         $action = $parameters['action'];
         $idLocale = $this->locale->getIdByCode($parameters['locale']);
@@ -290,7 +290,7 @@ class DibiDriver extends Driver
 
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 
-        return (array) ($this->constructUrl[$index] ?? []);
+        return ($this->constructUrl[$index] ?? '');
     }
 
 
