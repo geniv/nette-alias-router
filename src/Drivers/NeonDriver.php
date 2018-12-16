@@ -11,7 +11,7 @@ use Locale\ILocale;
  * @author  geniv
  * @package AliasRouter\Drivers
  */
-class NeonDriver extends Driver
+class NeonDriver extends ArrayDriver
 {
     /** @var string */
     private $path;
@@ -25,9 +25,9 @@ class NeonDriver extends Driver
      */
     public function __construct(string $path, ILocale $locale)
     {
-        parent::__construct($locale);
-
         $this->path = $path;
+
+        parent::__construct([], $locale);
     }
 
 //TODO sepsat, bude podobne systemu jako: vendor/geniv/nette-translator/src/Drivers/NeonDriver.php
