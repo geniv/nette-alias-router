@@ -198,6 +198,8 @@ class DibiDriver extends Driver
                     'alias'     => $alias,
                     'added%sql' => 'NOW()',
                 ])->execute(Dibi::IDENTIFIER);
+
+                $this->cleanCache();
             } catch (UniqueConstraintViolationException $e) {
                 dump($e);   //TODO doresit stejne linky
 //                // recursive resolve duplicate alias
@@ -211,7 +213,6 @@ class DibiDriver extends Driver
             }
         }
 
-        $this->cleanCache();
 
         return $id;
     }

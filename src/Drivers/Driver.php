@@ -65,7 +65,7 @@ abstract class Driver implements IDriver
         $result = 0;
         $safeAlias = Strings::webalize($alias, '/');    // webalize with ignore /
         if ($safeAlias) {
-            $idLocale = $this->locale->getIdByCode($presenter->getParameter('locale'));
+            $idLocale = $this->locale->getIdByCode($presenter->getParameter('locale', $this->locale->getCodeDefault()));
             $idItem = $presenter->getParameter('id');
             $result = $this->saveInternalData($presenter->getName(), $presenter->action, $safeAlias, $idLocale, $idItem);
         }

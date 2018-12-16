@@ -77,7 +77,8 @@ usage @layout.latte:
 
 manual create or delete:
 ```php
-use AliasRouter\RouterModel;
-$this->context->getByType(RouterModel::class)->createRouter('Homepage', 'default', 'muj alias');
-$this->context->getByType(RouterModel::class)->deleteRouter('Homepage', 'default');
+use AliasRouter\Drivers\IDriver;
+$this->context->getByType(IDriver::class)->deleteRouter('Homepage', 'default');
+$this->context->getByType(IDriver::class)->createRouter('Homepage', 'default', 'muj alias');
+$this->context->getByType(IDriver::class)->createRouter('Homepage', 'default', 'muj alias XX', ['locale' => 'en']);
 ```
