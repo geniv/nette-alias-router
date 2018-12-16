@@ -35,22 +35,6 @@ interface IDriver
 
 
     /**
-     * Get match.
-     *
-     * @return array
-     */
-    public function getMatch(): array;
-
-
-    /**
-     * Get construct url.
-     *
-     * @return array
-     */
-    public function getConstructUrl(): array;
-
-
-    /**
      * Insert alias.
      *
      * @param Presenter $presenter
@@ -82,12 +66,6 @@ interface IDriver
      * @return int
      */
     public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int;
-
-
-    /**
-     * Clean cache.
-     */
-    public function cleanCache();
 
 
     /**
