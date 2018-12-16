@@ -143,7 +143,7 @@ abstract class Driver implements IDriver
     {
         $action = $parameters['action'];
         $idLocale = $this->locale->getIdByCode($parameters['locale']);
-        $idItem = $parameters['id'] ?? null;
+        $idItem = $parameters['id'] ?? '-';
 
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
 

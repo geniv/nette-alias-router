@@ -189,11 +189,11 @@ class DibiDriver extends Driver
         if (!$id) {
             try {
                 $id = $this->connection->insert($this->tableRouterAlias, [
-                    'id_locale' => $idLocale,
-                    'id_router' => $idRouter,
-                    'id_item'   => $idItem,
-                    'alias'     => $alias,
-                    'added%sql' => 'NOW()',
+                    'id_locale'  => $idLocale,
+                    'id_router'  => $idRouter,
+                    'id_item%iN' => $idItem,    // 0=NULL
+                    'alias'      => $alias,
+                    'added%sql'  => 'NOW()',
                 ])->execute(Dibi::IDENTIFIER);
 
                 $this->cleanCache();
@@ -238,7 +238,7 @@ class DibiDriver extends Driver
         $this->constructUrl = $this->cache->load($cacheKey);
         if ($this->constructUrl === null) {
             $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, ' .
-                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
+                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", r.action, "-", IFNULL(a.id_item,"-")) uid')
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->orderBy(['r.id', 'a.id_locale'])->asc()
