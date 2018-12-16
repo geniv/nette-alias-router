@@ -13,7 +13,7 @@ or
 
 require:
 ```json
-"php": "^7.1",
+"php": "^7.0",
 "nette/nette": "^2.4",
 "dibi/dibi": "^4.0",
 "geniv/nette-locale": "^2.0"

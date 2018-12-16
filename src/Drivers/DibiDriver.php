@@ -201,7 +201,6 @@ class DibiDriver extends Driver
 
                 $this->cleanCache();
             } catch (UniqueConstraintViolationException $e) {
-                dump($e);   //TODO doresit stejne linky
 //                // recursive resolve duplicate alias
 //                $al = explode('--', $alias);    // explode alias
 //                if (count($al) > 1) {
@@ -212,8 +211,6 @@ class DibiDriver extends Driver
 //                $id = $this->getIdRouterAlias($idRouter, $idLocale, $idItem, $alias);   // but db autoincrement is still increment :(
             }
         }
-
-
         return $id;
     }
 
