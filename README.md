@@ -23,7 +23,7 @@ Include in application
 ----------------------
 
 available source drivers:
-- ArrayDriver ()
+- ArrayDriver (array)
 - NeonDriver ()
 - DibiDriver (dibi + cache `_AliasRouter-DibiDriver`)
 
@@ -31,11 +31,20 @@ In router alias is not good idea change last alias, but insert new alias with ne
 
 neon configure:
 ```neon
+route:
+    cs:
+        "staticky-slug": "Homepage:pokus"
+        "staticky-slug1": "Homepage:pokus2"
+    en:
+        "static-slu": "Homepage:pokus"
+        "static-slug1": "Homepage:pokus2"
+
+
 # alias router
 aliasRouter:
 #   debugger: true
 #   autowired: true
-#    driver: AliasRouter\Drivers\ArrayDriver()
+#    driver: AliasRouter\Drivers\ArrayDriver(%route%)
 #    driver: AliasRouter\Drivers\NeonDriver()
     driver: AliasRouter\Drivers\DibiDriver(%tablePrefix%)
 #   enabled: true
