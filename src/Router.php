@@ -136,11 +136,11 @@ class Router implements IRouter
             return null;
         }
 
-        $param = $this->driver->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
-        if ($param) {
+        $urlAlias = $this->driver->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
+        if ($urlAlias) {
             $parameters = $appRequest->parameters;
 
-            $part = implode('/', array_filter([$this->driver->getCodeLocale($parameters, $this->domainAlias), $param['alias']]));
+            $part = implode('/', array_filter([$this->driver->getCodeLocale($parameters, $this->domainAlias), $urlAlias]));
             $alias = trim(isset($parameters[$this->paginatorVariable]) ? implode('_', [$part, $parameters[$this->paginatorVariable]]) : $part, '/_');
 
             unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->paginatorVariable]);

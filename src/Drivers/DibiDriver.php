@@ -241,12 +241,12 @@ class DibiDriver extends Driver
         $this->constructUrl = $this->cache->load($cacheKey);
         if ($this->constructUrl === null) {
             $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, ' .
-                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", r.action, "-", IFNULL(a.id_item,"-")) uid')
+                'CONCAT(a.id_locale, "-", r.presenter, "-", r.action, "-", IFNULL(a.id_item,"-")) uid')
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->orderBy(['r.id', 'a.id_locale'])->asc()
                 ->orderBy('a.added')->desc()
-                ->fetchAssoc('uid');
+                ->fetchPairs('uid', 'alias');
 
             try {
                 $this->cache->save($cacheKey, $this->constructUrl, [
@@ -302,13 +302,13 @@ class DibiDriver extends Driver
      */
     public function getRouterAlias(Presenter $presenter): array
     {
-        $name = $presenter->getName();
+        $presenterName = $presenter->getName();
         $action = $presenter->action;
         $idLocale = $this->locale->getId();
         $idItem = $presenter->getParameter('id');
 
-        $result = array_filter($this->match, function ($row) use ($name, $action, $idLocale, $idItem) {
-            return ($row['presenter'] == $name &&
+        $result = array_filter($this->match, function ($row) use ($presenterName, $action, $idLocale, $idItem) {
+            return ($row['presenter'] == $presenterName &&
                 $row['action'] == $action &&
                 $row['id_locale'] == $idLocale &&
                 $row['id_item'] == $idItem);

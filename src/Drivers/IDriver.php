@@ -29,9 +29,9 @@ interface IDriver
      *
      * @param string $presenter
      * @param array  $parameters
-     * @return array
+     * @return string
      */
-    public function getAliasByParameters(string $presenter, array $parameters): array;
+    public function getAliasByParameters(string $presenter, array $parameters): string;
 
 
     /**
