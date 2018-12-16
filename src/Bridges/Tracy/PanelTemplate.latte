@@ -8,10 +8,10 @@
             <th>Added</th>
         </tr>
         <tr n:foreach="$routes as $route">
-            <td><strong n:tag-if="$urlId==$route['id_item']">{$route['id']}</strong></td>
-            <td><strong n:tag-if="$urlId==$route['id_item']">{$route['alias']}</strong></td>
-            <td><strong n:tag-if="$urlId==$route['id_item']">{$route['id_item']}</strong></td>
-            <td><strong n:tag-if="$urlId==$route['id_item']">{$route['added']|date:'d.m.Y H:i:s'}</strong></td>
+            <td><strong n:tag-if="$iterator->last">{$route['aid']}</strong></td>
+            <td><strong n:tag-if="$iterator->last">{$route['alias']}</strong></td>
+            <td><strong n:tag-if="$iterator->last">{$route['id_item']}</strong></td>
+            <td><strong n:tag-if="$iterator->last">{$route['added']|date:'d.m.Y H:i:s'}</strong></td>
         </tr>
         <tr n:if="$iterations==0">
             <td colspan="4" style="text-align: center;">No alias</td>

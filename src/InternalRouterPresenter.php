@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AliasRouter;
 
@@ -39,7 +39,7 @@ class InternalRouterPresenter extends Presenter
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -49,9 +49,9 @@ class InternalRouterPresenter extends Presenter
      * Get action.
      *
      * @param bool $fullyQualified
-     * @return mixed|string
+     * @return string
      */
-    public function getAction($fullyQualified = false)
+    public function getAction($fullyQualified = false): string
     {
         return ($fullyQualified ? ':' . $this->getName() . ':' . $this->params['action'] : $this->params['action']);
     }

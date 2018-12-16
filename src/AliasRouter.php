@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AliasRouter;
 
+use AliasRouter\Drivers\IDriver;
 use Nette\Application\IRouter;
-use Nette\Application\Request;
-use Nette\Http\IRequest;
-use Nette\Http\Url;
 use Nette\SmartObject;
 
 
@@ -15,88 +13,167 @@ use Nette\SmartObject;
  * @author  geniv
  * @package AliasRouter
  */
-class AliasRouter implements IRouter
+class AliasRouter implements IAliasRouter
 {
     use SmartObject;
 
-    /** @var bool default inactive https */
+    /** @var array */
+    private $domainAlias = [];
+    /** @var bool */
+    private $enabled = true;
+    /** @var IDriver */
+    private $driver;
+
+    /** @var bool */
     private $secure = false;
-    /** @var bool default inactive one way router */
+    /** @var bool */
     private $oneWay = false;
-    /** @var RouterModel router model */
-    private $routerModel;
-    /** @var array default parameters */
+
+    /** @var array */
     private $defaultParameters = [];
-    /** @var string paginator variable */
+    /** @var string */
     private $paginatorVariable = 'vp';
 
 
     /**
      * AliasRouter constructor.
      *
-     * @param RouterModel $model
+     * @param bool    $enabled
+     * @param array   $domainAlias
+     * @param IDriver $driver
      */
-    public function __construct(RouterModel $model)
+    public function __construct(bool $enabled, array $domainAlias, IDriver $driver)
     {
-        $this->routerModel = $model;
+        $this->domainAlias = $domainAlias;
+        $this->enabled = $enabled;
+        $this->driver = $driver;
+    }
+
+
+    /**
+     * Get driver.
+     *
+     * @return IDriver
+     */
+    public function getDriver(): IDriver
+    {
+        return $this->driver;
+    }
+
+
+    /**
+     * Get router.
+     *
+     * @return IRouter
+     */
+    public function getRouter(): IRouter
+    {
+        return new Router($this);
+    }
+
+
+    /**
+     * Get domain alias.
+     *
+     * @return array
+     */
+    public function getDomainAlias(): array
+    {
+        return $this->domainAlias;
+    }
+
+
+    /**
+     * Is secure.
+     *
+     * @return bool
+     */
+    public function isSecure(): bool
+    {
+        return $this->secure;
     }
 
 
     /**
      * Enable https, default is disable.
      *
-     * @param $secure
-     * @return $this
+     * @param bool $secure
      */
-    public function setSecure($secure)
+    public function setSecure(bool $secure)
     {
         $this->secure = $secure;
-        return $this;
+    }
+
+
+    /**
+     * Is one way.
+     *
+     * @return bool
+     */
+    public function isOneWay(): bool
+    {
+        return $this->oneWay;
     }
 
 
     /**
      * Enable one way router.
      *
-     * @param $oneWay
-     * @return $this
+     * @param bool $oneWay
      */
-    public function setOneWay($oneWay)
+    public function setOneWay(bool $oneWay)
     {
         $this->oneWay = $oneWay;
-        return $this;
+    }
+
+
+    /**
+     * Get default parameters.
+     *
+     * @return array
+     */
+    public function getDefaultParameters(): array
+    {
+        return $this->defaultParameters;
     }
 
 
     /**
      * Set default parameters, presenter, action and locale.
      *
-     * @param $presenter
-     * @param $action
-     * @param $locale
-     * @return $this
+     * @param string $presenter
+     * @param string $action
+     * @param string $locale
      */
-    public function setDefaultParameters($presenter, $action, $locale)
+    public function setDefaultParameters(string $presenter, string $action, string $locale)
     {
         $this->defaultParameters = [
             'presenter' => $presenter,
             'action'    => $action,
             'locale'    => $locale,
         ];
-        return $this;
+    }
+
+
+    /**
+     * Get paginator variable.
+     *
+     * @return string
+     */
+    public function getPaginatorVariable(): string
+    {
+        return $this->paginatorVariable;
     }
 
 
     /**
      * Set paginator variable.
      *
-     * @param $variable
-     * @return $this
+     * @param string $variable
      */
-    public function setPaginatorVariable($variable)
+    public function setPaginatorVariable(string $variable)
     {
         $this->paginatorVariable = $variable;
-        return $this;
     }
 
 
@@ -105,136 +182,8 @@ class AliasRouter implements IRouter
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
-        return $this->routerModel->isEnabled();
-    }
-
-
-    /**
-     * Maps HTTP request to a Request object.
-     *
-     * @param IRequest $httpRequest
-     * @return Request|NULL
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    public function match(IRequest $httpRequest)
-    {
-        $pathInfo = $httpRequest->getUrl()->getPathInfo();
-
-        // parse locale
-        $locale = $this->defaultParameters['locale'];
-        if (preg_match('/((?<locale>[a-z]{2})\/)?/', $pathInfo, $m) && isset($m['locale'])) {
-            $locale = trim($m['locale'], '/_');
-            $pathInfo = trim(substr($pathInfo, strlen($m['locale'])), '/_');   // ocesani slugu
-        }
-
-        // vyber jazyka podle domeny
-        $domain = $this->routerModel->getDomain();
-        if ($domain && $domain['switch']) {
-            $host = $httpRequest->url->host;    // nacteni url hostu pro zvoleni jazyka
-            if (isset($domain['alias'][$host])) {
-                $locale = $domain['alias'][$host];
-            }
-        }
-
-        // parse alias
-        $alias = null;
-        if (preg_match('/((?<alias>[a-z0-9-\/]+)(\/)?)?/', $pathInfo, $m) && isset($m['alias'])) {
-            $alias = trim($m['alias'], '/_');
-            $pathInfo = trim(substr($pathInfo, strlen($m['alias'])), '/_');   // ocesani jazyka od slugu
-        }
-
-        // parse paginator
-        $parameters = [];
-        if (preg_match('/((?<vp>[a-z0-9-]+)(\/)?)?/', $pathInfo, $m) && isset($m['vp'])) {
-            $parameters[$this->paginatorVariable] = trim($m['vp'], '/_');
-        }
-
-        // set default presenter
-        $presenter = $this->defaultParameters['presenter'];
-
-        // set locale to parameters
-        $parameters['locale'] = $locale;
-
-        // akceptace adresy kde je na konci zbytecne lomitko, odebere posledni lomitko
-        if ($alias) {
-            $alias = rtrim($alias, '/_');
-        }
-
-        if ($alias) {
-            // load parameters from database
-            $param = $this->routerModel->getParametersByAlias($locale, $alias);
-            if ($param) {
-                $presenter = $param->presenter;
-                $parameters['action'] = $param->action;
-                if ($param->id_item) {
-                    $parameters['id'] = $param->id_item;
-                }
-            } else {
-                return null;
-            }
-        }
-
-        $parameters += $httpRequest->getQuery();
-
-        if (!$presenter) {
-            return null;
-        }
-
-        return new Request(
-            $presenter,
-            $httpRequest->getMethod(),
-            $parameters,
-            $httpRequest->getPost(),
-            $httpRequest->getFiles(),
-            [Request::SECURED => $httpRequest->isSecured()]
-        );
-    }
-
-
-    /**
-     * Constructs absolute URL from Request object.
-     *
-     * @param Request $appRequest
-     * @param Url     $refUrl
-     * @return NULL|string
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    public function constructUrl(Request $appRequest, Url $refUrl)
-    {
-        // in one way mode or ignore ajax request
-        if ($this->oneWay || isset($appRequest->parameters['do'])) {
-            return null;
-        }
-
-        $param = $this->routerModel->getAliasByParameters($appRequest->presenterName, $appRequest->parameters);
-        if ($param) {
-            $parameters = $appRequest->parameters;
-
-            $part = implode('/', array_filter([$this->routerModel->getCodeLocale($parameters), $param->alias]));
-            $alias = trim(isset($parameters[$this->paginatorVariable]) ? implode('_', [$part, $parameters[$this->paginatorVariable]]) : $part, '/_');
-
-            unset($parameters['locale'], $parameters['action'], $parameters['alias'], $parameters['id'], $parameters[$this->paginatorVariable]);
-
-            // create url address
-            $url = new Url($refUrl->getBaseUrl() . $alias);
-            $url->setScheme($this->secure ? 'https' : 'http');
-            $url->setQuery($parameters);
-            return $url->getAbsoluteUrl();
-        } else {
-            // vyber jazyka podle domeny
-            $domain = $this->routerModel->getDomain();
-            // pokud je aktivni detekce podle domeny tak preskakuje FORWARD metodu nebo Homepage presenter
-            // jde o vyhazovani lokalizace na HP pri zapnutem domain switch
-            if ($domain && $domain['switch'] && ($appRequest->method != 'FORWARD' || $appRequest->presenterName == 'Homepage')) {
-                $url = new Url($refUrl->getBaseUrl());  // vytvari zakladni cestu bez parametru
-                $url->setScheme($this->secure ? 'https' : 'http');
-                return $url->getAbsoluteUrl();
-            }
-        }
-        return null;
+        return $this->enabled;
     }
 }
