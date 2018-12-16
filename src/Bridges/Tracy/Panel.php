@@ -75,14 +75,9 @@ class Panel implements IBarPanel
     public function getPanel()
     {
         $presenter = $this->application->getPresenter();
-
-        dump($this->driver->getRouterAlias($presenter, $this->locale->getId(), $presenter->getParameter('id')));
-
-//FIXME predelat?!!!
+        $routes = $this->driver->getRouterAlias($presenter, $this->locale->getId(), $presenter->getParameter('id'));
         $params = [
-//            'routes' => ($presenter ? $this->routerModel->getRouterAlias($presenter, $this->locale->getId()) : []),
-'routes' => [],
-'urlId'  => $presenter->getParameter('id'),
+            'routes' => ($presenter ? $routes : []),
         ];
         $latte = new Engine;
         return $latte->renderToString(__DIR__ . '/PanelTemplate.latte', $params);

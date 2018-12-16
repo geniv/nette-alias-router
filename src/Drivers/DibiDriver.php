@@ -200,12 +200,12 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, a.id_locale, CONCAT(a.id_locale, "-", a.alias) uid')
+        $this->match = $this->connection->select('r.id rid, a.id aid, r.presenter, r.action, a.id_item, a.id_locale, a.added, CONCAT(a.id_locale, "-", a.alias) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->fetchAssoc('uid');    //FIXME cachovat!!
 
-        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, a.id_locale, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
+        $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, a.id_item, a.id_locale, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", IFNULL(r.action,"-"), IFNULL(a.id_item,"-")) uid')
             ->from($this->tableRouter)->as('r')
             ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
             ->orderBy(['r.id', 'a.id_locale'])->asc()
