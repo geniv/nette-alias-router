@@ -77,6 +77,7 @@ class Panel implements IBarPanel
         $presenter = $this->application->getPresenter();
         $routes = $this->driver->getRouterAlias($presenter);
         $params = [
+            'class'  => get_class($this->driver),
             'routes' => ($presenter ? $routes : []),
         ];
         $latte = new Engine;
