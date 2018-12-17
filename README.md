@@ -45,7 +45,7 @@ aliasRouter:
 #   debugger: true
 #   autowired: true
 #    driver: AliasRouter\Drivers\ArrayDriver(%route%)
-#    driver: AliasRouter\Drivers\NeonDriver()
+#    driver: AliasRouter\Drivers\NeonDriver(%appDir%/router.neon)
     driver: AliasRouter\Drivers\DibiDriver(%tablePrefix%)
 #   enabled: true
 #   domainAlias:

@@ -6,6 +6,7 @@ use dibi;
 use Dibi\Connection;
 use Dibi\UniqueConstraintViolationException;
 use Locale\ILocale;
+use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 
@@ -29,6 +30,8 @@ class DibiDriver extends Driver
     private $connection;
     /** @var Cache */
     private $cache;
+    /** @var array */
+    protected $match, $constructUrl;
 
 
     /**
@@ -238,12 +241,12 @@ class DibiDriver extends Driver
         $this->constructUrl = $this->cache->load($cacheKey);
         if ($this->constructUrl === null) {
             $this->constructUrl = $this->connection->select('r.id rid, a.id aid, a.alias, ' .
-                'a.id_item, a.id_locale, a.alias, a.added, CONCAT(a.id_locale, "-", r.presenter, "-", r.action, "-", IFNULL(a.id_item,"-")) uid')
+                'CONCAT(a.id_locale, "-", r.presenter, "-", r.action, "-", IFNULL(a.id_item,"-")) uid')
                 ->from($this->tableRouter)->as('r')
                 ->join($this->tableRouterAlias)->as('a')->on('a.id_router=r.id')
                 ->orderBy(['r.id', 'a.id_locale'])->asc()
                 ->orderBy('a.added')->desc()
-                ->fetchAssoc('uid');
+                ->fetchPairs('uid', 'alias');
 
             try {
                 $this->cache->save($cacheKey, $this->constructUrl, [
@@ -252,5 +255,64 @@ class DibiDriver extends Driver
             } catch (\Throwable $e) {
             }
         }
+    }
+
+
+    /**
+     * Get parameters by alias.
+     *
+     * @param string $locale
+     * @param string $alias
+     * @return array
+     */
+    public function getParametersByAlias(string $locale, string $alias): array
+    {
+        $idLocale = $this->locale->getIdByCode($locale);
+
+        $index = $idLocale . '-' . $alias;
+
+        return (array) ($this->match[$index] ?? []);
+    }
+
+
+    /**
+     * Get alias by parameters.
+     *
+     * @param string $presenter
+     * @param array  $parameters
+     * @return string
+     */
+    public function getAliasByParameters(string $presenter, array $parameters): string
+    {
+        $action = $parameters['action'];
+        $idLocale = $this->locale->getIdByCode($parameters['locale']);
+        $idItem = $parameters['id'] ?? '-';
+
+        $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;
+
+        return ($this->constructUrl[$index] ?? '');
+    }
+
+
+    /**
+     * Get router alias.
+     *
+     * @param Presenter $presenter
+     * @return array
+     */
+    public function getRouterAlias(Presenter $presenter): array
+    {
+        $presenterName = $presenter->getName();
+        $action = $presenter->action;
+        $idLocale = $this->locale->getId();
+        $idItem = $presenter->getParameter('id');
+
+        $result = array_filter($this->match, function ($row) use ($presenterName, $action, $idLocale, $idItem) {
+            return ($row['presenter'] == $presenterName &&
+                $row['action'] == $action &&
+                $row['id_locale'] == $idLocale &&
+                $row['id_item'] == $idItem);
+        });
+        return $result;
     }
 }
