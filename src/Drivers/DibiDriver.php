@@ -285,7 +285,7 @@ class DibiDriver extends Driver
     public function getAliasByParameters(string $presenter, array $parameters): string
     {
         $action = $parameters['action'];
-        $idLocale = $this->locale->getIdByCode($parameters['locale']);
+        $idLocale = $this->locale->getIdByCode($parameters['locale'] ?? '');
         $idItem = $parameters['id'] ?? '-';
 
         $index = $idLocale . '-' . $presenter . '-' . $action . '-' . $idItem;

@@ -104,7 +104,7 @@ class ArrayDriver extends Driver
     public function getAliasByParameters(string $presenter, array $parameters): string
     {
         $result = '';
-        $flip = array_flip($this->route[$parameters['locale']]);
+        $flip = array_flip($this->route[$parameters['locale'] ?? $this->locale->getCodeDefault()]);
         $action = $parameters['action'];
         if (isset($flip[$presenter . ':' . $action])) {
             $result = $flip[$presenter . ':' . $action];
