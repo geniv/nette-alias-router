@@ -2,6 +2,4 @@
 vendor
 composer.lock
 composer.phar
-.docker
-docker-compose.yml
-docker_control.sh
+.docker-component

@@ -8,13 +8,20 @@ $ composer require geniv/nette-alias-router
 ```
 or
 ```json
-"geniv/nette-alias-router": "^3.0"
+"geniv/nette-alias-router": "^3.1"
 ```
 
 require:
 ```json
 "php": ">=7.0",
-"nette/nette": ">=2.4",
+"nette/application": ">=2.4",
+"nette/caching": ">=2.5",
+"nette/di": ">=2.4",
+"nette/http": ">=2.4",
+"nette/neon": ">=2.4",
+"nette/utils": ">=2.4",
+"latte/latte": ">=2.4",
+"tracy/tracy": ">=2.4",
 "dibi/dibi": ">=3.0",
 "geniv/nette-locale": ">=2.0"
 ```
