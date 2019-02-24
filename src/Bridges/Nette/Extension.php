@@ -52,6 +52,7 @@ class Extension extends CompilerExtension
         // linked filter to latte
         $builder->getDefinition('latte.latteFactory')
             ->addSetup('addFilter', ['addSlug', $slug]);
+//          ->addSetup('addFilter', ['addSlug', [$slug, '__invoke']]);
 
         // define panel
         if ($config['debugger']) {
