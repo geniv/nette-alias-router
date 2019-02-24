@@ -42,6 +42,7 @@ class FilterSlug
      *
      * @param FilterInfo $info
      * @param            $string
+     * @return string
      * @throws \Exception
      * @throws \Throwable
      */
@@ -49,5 +50,6 @@ class FilterSlug
     {
         $presenter = $this->application->getPresenter();
         $this->driver->insertAlias($presenter, $string);
+        return '';
     }
 }
