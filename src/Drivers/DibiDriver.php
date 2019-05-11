@@ -220,6 +220,10 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
+        if (!$this->enabled) {
+            return false;
+        }
+
         $cacheKey = 'loadInternalDataMatch';
         $this->match = $this->cache->load($cacheKey);
         if ($this->match === null) {

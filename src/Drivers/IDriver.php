@@ -13,6 +13,13 @@ use Nette\Application\UI\Presenter;
  */
 interface IDriver
 {
+    /**
+     * Set enabled.
+     *
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled);
+
 
     /**
      * Get parameters by alias.

@@ -42,7 +42,8 @@ class Extension extends CompilerExtension
         // define driver
         $driver = $builder->addDefinition($this->prefix('driver'))
             ->setFactory($config['driver'])
-            ->setAutowired($config['autowired']);
+            ->setAutowired($config['autowired'])
+            ->addSetup('setEnabled', [$config['enabled']]);
 
         // define filter
         $slug = $builder->addDefinition($this->prefix('filter.slug'))

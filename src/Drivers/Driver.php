@@ -21,6 +21,8 @@ abstract class Driver implements IDriver
 
     /** @var ILocale */
     protected $locale;
+    /** @var bool */
+    protected $enabled = true;
 
 
     /**
@@ -31,6 +33,17 @@ abstract class Driver implements IDriver
     public function __construct(ILocale $locale)
     {
         $this->locale = $locale;
+    }
+
+
+    /**
+     * Set enabled.
+     *
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled)
+    {
+        $this->enabled = $enabled;
     }
 
 
