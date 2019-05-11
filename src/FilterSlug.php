@@ -3,9 +3,12 @@
 namespace AliasRouter;
 
 use AliasRouter\Drivers\IDriver;
+use Exception;
 use Latte\Runtime\FilterInfo;
 use Nette\Application\Application;
+use Nette\Application\UI\Presenter;
 use Nette\SmartObject;
+use Throwable;
 
 
 /**
@@ -27,13 +30,13 @@ class FilterSlug
     /**
      * FilterSlug constructor.
      *
-     * @param IDriver     $driver
-     * @param Application $application
+     * @param Application  $application
+     * @param IDriver|null $driver
      */
-    public function __construct(IDriver $driver, Application $application)
+    public function __construct(Application $application, IDriver $driver = null)
     {
-        $this->driver = $driver;
         $this->application = $application;
+        $this->driver = $driver;
     }
 
 
@@ -43,11 +46,12 @@ class FilterSlug
      * @param FilterInfo $info
      * @param            $string
      * @return string
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws Exception
+     * @throws Throwable
      */
     public function __invoke(FilterInfo $info, $string)
     {
+        /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         $this->driver->insertAlias($presenter, $string);
         return '';

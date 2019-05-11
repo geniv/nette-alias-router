@@ -38,11 +38,11 @@ class AliasRouter implements IAliasRouter
     /**
      * AliasRouter constructor.
      *
-     * @param bool    $enabled
-     * @param array   $domainAlias
-     * @param IDriver $driver
+     * @param bool         $enabled
+     * @param array        $domainAlias
+     * @param IDriver|null $driver
      */
-    public function __construct(bool $enabled, array $domainAlias, IDriver $driver)
+    public function __construct(bool $enabled, array $domainAlias, IDriver $driver = null)
     {
         $this->domainAlias = $domainAlias;
         $this->enabled = $enabled;
