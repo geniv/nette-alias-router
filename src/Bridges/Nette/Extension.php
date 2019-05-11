@@ -39,11 +39,13 @@ class Extension extends CompilerExtension
             ->setFactory(AliasRouter::class, [$config['enabled'], $config['domainAlias']])
             ->setAutowired($config['autowired']);
 
-        // define driver
-        $driver = $builder->addDefinition($this->prefix('driver'))
-            ->setFactory($config['driver'])
-            ->setAutowired($config['autowired'])
-            ->addSetup('setEnabled', [$config['enabled']]);
+        $driver = null;
+        if ($config['enabled']) {
+            // define driver
+            $driver = $builder->addDefinition($this->prefix('driver'))
+                ->setFactory($config['driver'])
+                ->setAutowired($config['autowired']);
+        }
 
         // define filter
         $slug = $builder->addDefinition($this->prefix('filter.slug'))
@@ -56,7 +58,7 @@ class Extension extends CompilerExtension
 //          ->addSetup('addFilter', ['addSlug', [$slug, '__invoke']]);
 
         // define panel
-        if ($config['debugger']) {
+        if ($config['debugger'] && $config['enabled']) {
             $panel = $builder->addDefinition($this->prefix('panel'))
                 ->setFactory(Panel::class, [$driver]);
 
@@ -75,7 +77,7 @@ class Extension extends CompilerExtension
         $builder = $this->getContainerBuilder();
         $config = $this->validateConfig($this->defaults);
 
-        if ($config['debugger']) {
+        if ($config['debugger'] && $config['enabled']) {
             $onRequest = 'application.application';
             // linked to application request
             $builder->getDefinition($onRequest)

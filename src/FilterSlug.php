@@ -27,10 +27,10 @@ class FilterSlug
     /**
      * FilterSlug constructor.
      *
-     * @param IDriver     $driver
-     * @param Application $application
+     * @param Application  $application
+     * @param IDriver|null $driver
      */
-    public function __construct(IDriver $driver, Application $application)
+    public function __construct(Application $application, IDriver $driver = null)
     {
         $this->driver = $driver;
         $this->application = $application;
