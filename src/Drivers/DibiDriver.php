@@ -4,11 +4,13 @@ namespace AliasRouter\Drivers;
 
 use dibi;
 use Dibi\Connection;
+use Dibi\Exception;
 use Dibi\UniqueConstraintViolationException;
 use Locale\ILocale;
 use Nette\Application\UI\Presenter;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Throwable;
 
 
 /**
@@ -65,7 +67,7 @@ class DibiDriver extends Driver
      * @param string|null $alias
      * @param array       $parameters
      * @return int
-     * @throws \Dibi\Exception
+     * @throws Exception
      */
     public function deleteRouter(string $presenter = null, string $action = null, string $alias = null, array $parameters = []): int
     {
@@ -118,7 +120,7 @@ class DibiDriver extends Driver
      * @param string $presenter
      * @param string $action
      * @return int
-     * @throws \Dibi\Exception
+     * @throws Exception
      */
     private function getIdRouter(string $presenter, string $action): int
     {
@@ -137,7 +139,7 @@ class DibiDriver extends Driver
                 $this->cache->save($cacheKey, $result, [
                     Cache::TAGS => ['loadData'],
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
         }
 
@@ -160,7 +162,7 @@ class DibiDriver extends Driver
      * @param int      $idLocale
      * @param int|null $idItem
      * @return int
-     * @throws \Dibi\Exception
+     * @throws Exception
      */
     protected function saveInternalData(string $presenter, string $action, string $alias, int $idLocale, int $idItem = null): int
     {
@@ -185,7 +187,7 @@ class DibiDriver extends Driver
                 $this->cache->save($cacheKey, $id, [
                     Cache::TAGS => ['loadData'],
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
         }
 
@@ -220,10 +222,6 @@ class DibiDriver extends Driver
      */
     protected function loadInternalData()
     {
-        if (!$this->enabled) {
-            return false;
-        }
-
         $cacheKey = 'loadInternalDataMatch';
         $this->match = $this->cache->load($cacheKey);
         if ($this->match === null) {
@@ -237,7 +235,7 @@ class DibiDriver extends Driver
                 $this->cache->save($cacheKey, $this->match, [
                     Cache::TAGS => ['loadData'],
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
         }
 
@@ -256,7 +254,7 @@ class DibiDriver extends Driver
                 $this->cache->save($cacheKey, $this->constructUrl, [
                     Cache::TAGS => ['loadData'],
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
         }
     }
